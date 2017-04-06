@@ -43,6 +43,7 @@ int main(int argc, char *args[])
         SDL_RenderDrawRect(g_Renderer, &menu_tile[i]);
         SDL_RenderPresent(g_Renderer);
     }
+    //Boucle à vérifier
     while(continuer)
     {
         SDL_WaitEvent(&event);

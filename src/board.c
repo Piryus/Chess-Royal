@@ -179,6 +179,7 @@ void jeu(SDL_Window *g_Window, SDL_Renderer *g_Renderer)
     render_base(g_Renderer);
     init_pawn(pion); //&pion ?
     render_pawn(g_Renderer, pion);
+    //Boucle à vérifier (ne loop pas ?!)
     while(stop!=0)
     {
         SDL_WaitEvent(&event);
