@@ -47,6 +47,7 @@
 		<Unit filename="src/Enregistreur.c">
 			<Option compilerVar="CC" />
 			<Option compile="0" />
+			<Option link="0" />
 		</Unit>
 		<Unit filename="src/SDLShorts.c">
 			<Option compilerVar="CC" />

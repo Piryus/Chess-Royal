@@ -1,5 +1,4 @@
 #include "defs.h"
-SDL_Texture *loadIMG(char path[], SDL_Renderer *g_Renderer);
 int init(SDL_Window **g_Window,SDL_Renderer **g_Renderer)
 {
     SDL_Surface *icon=NULL;

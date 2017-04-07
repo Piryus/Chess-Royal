@@ -63,11 +63,12 @@ int main(int argc, char *args[])
                     SDL_DestroyTexture(menu);
                 SDL_RenderClear(g_Renderer);
                 jeu(g_Window,g_Renderer);
-                getchar();
                 continuer=0;
                 break;
             case SDLK_2:
                 continuer=0;
+                break;
+            default:
                 break;
             }
             break;

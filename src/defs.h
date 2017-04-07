@@ -31,6 +31,7 @@ typedef struct pion
     int x;
     int y;
     int isInInitPos; //1=position de départ 0=le pion a déjà été déplacé
+    int isSelected;
 } pion;
 
 typedef struct square
@@ -59,3 +60,18 @@ typedef struct game
 
 //Prototypes des fonctions
 extern void jeu(SDL_Window *g_Window, SDL_Renderer *g_Renderer);
+extern SDL_Rect get_clicked_square(int x, int y);
+extern int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion[32]);
+extern void render_pawn(SDL_Renderer *g_Renderer, pion pion[32]);
+extern void init_pawn(pion pion[]);
+extern int posy(int numcase);
+extern int posx(int numcase);
+extern int numcase_to_coord_y(int numcase);
+extern int numcase_to_coord_x(int numcase);
+extern int numcase_to_coord_y(int numcase);
+
+//SDL Functions
+extern int RendTex(SDL_Texture *texture, SDL_Renderer *g_Renderer, int x, int y);
+extern SDL_Texture *loadFont_Blended(SDL_Renderer *g_Renderer, TTF_Font *police, char texte[], int red, int green, int blue);
+extern SDL_Texture *loadIMG(char path[], SDL_Renderer *g_Renderer);
+extern int init(SDL_Window **g_Window,SDL_Renderer **g_Renderer);

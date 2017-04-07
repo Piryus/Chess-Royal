@@ -1,8 +1,6 @@
 #include "defs.h"
 
 /* Fonction permettant d'afficher la base se trouvant sous l'échiquier*/
-SDL_Rect get_clicked_square(int x, int y);
-void jeu(SDL_Window *g_Window, SDL_Renderer *g_Renderer);
 void render_base(SDL_Renderer *g_Renderer)
 {
     SDL_Texture *bg = NULL;
@@ -62,8 +60,8 @@ int posy(int numcase)
 /* Fonction initialisant la position de départ des pions ainsi que leurs couleurs*/
 void init_pawn(pion pion[])
 {
-    int k = 1;
-    for(int i = 0; i <= 7; i++)
+    int k = 0;
+    for(int i = 0; i < 8; i++)
     {
         for(int j = 0; j <= 1; j++)
         {
@@ -71,6 +69,7 @@ void init_pawn(pion pion[])
             pion[k].x = i;
             pion[k].y = j;
             pion[k].isInInitPos = 1;
+            pion[k].isSelected = 0;
             k++;
         }
     }
@@ -82,6 +81,7 @@ void init_pawn(pion pion[])
             pion[k].x = i;
             pion[k].y = j;
             pion[k].isInInitPos = 1;
+            pion[k].isSelected = 0;
             k++;
         }
     }
@@ -92,7 +92,7 @@ void render_pawn(SDL_Renderer *g_Renderer, pion pion[32])
     SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
     pion_noir = loadIMG("sprites/blackpawn.png", g_Renderer);
     pion_blanc = loadIMG("sprites/whitepawn.png", g_Renderer);
-    for(int i = 1; i <= 32; i++)
+    for(int i = 0; i <= 32; i++)
     {
         if(pion[i].isBlack == 0)
         {
@@ -106,9 +106,10 @@ void render_pawn(SDL_Renderer *g_Renderer, pion pion[32])
     SDL_RenderPresent(g_Renderer);
 }
 //********************************************************************************************************************
-void highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion[32])
+int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion[32])
 {
     int rendersquare = 1;
+    int isMovesShown=0;
     SDL_Texture *dot = NULL;
     if((clickedSquare.x!=0)&&(clickedSquare.y!=0))
     {
@@ -121,7 +122,7 @@ void highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pio
                 SDL_RenderFillRect(g_Renderer, &clickedSquare);
                 if(pion[k].isInInitPos == 1)   //Si le pion est en positon initiale = 2 cases
                 {
-                    for(int b = 1; b <= 32; b++)   //on vérifie qu'il n'y est pas de pion devant le pion
+                    for(int b = 1; b <= 32; b++)   //on vérifie qu'il n'y ait pas de pion devant le pion
                     {
                         if(((numcase_to_coord_x(pion[k].y + 1) == numcase_to_coord_x(pion[b].y))&&(pion[k].isBlack == 1))
                                 ||((numcase_to_coord_x(pion[k].y - 1) == numcase_to_coord_x(pion[b].y)) && (pion[k].isBlack == 0)))
@@ -146,6 +147,7 @@ void highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pio
 
     }
     SDL_RenderPresent(g_Renderer);
+    return rendersquare;
 }
 /* Fonction permettant de renvoyer la case sur laquelle on a cliqué*/
 SDL_Rect get_clicked_square(int x, int y)
@@ -170,46 +172,61 @@ SDL_Rect get_clicked_square(int x, int y)
 }
 //********************************************************************************************************************
 void jeu(SDL_Window *g_Window, SDL_Renderer *g_Renderer)
-{
+{   int isMovesShown;
     pion pion[32];
-    int stop=2;
+    int stop=0;
     SDL_Event event;
     SDL_Rect clickedSquare;
     SDL_RenderClear(g_Renderer);
     render_base(g_Renderer);
-    init_pawn(pion); //&pion ?
+    init_pawn(pion);
     render_pawn(g_Renderer, pion);
-    //Boucle à vérifier (ne loop pas ?!)
-    while(stop!=0)
+    while(stop!=1)
     {
         SDL_WaitEvent(&event);
         switch(event.type)
         {
         case SDL_QUIT:
-            printf("quit");
             stop=1;
             break;
         case SDL_KEYDOWN:
-            printf("key");
             switch(event.key.keysym.sym)
             {
             case SDLK_ESCAPE:
                 stop=1;
                 break;
+            default:
+                break;
             }
+            break;
         case SDL_MOUSEBUTTONDOWN:
-            printf("mouse");
             if(event.button.button == SDL_BUTTON_LEFT)   // Bouton souris gauche
             {
                 clickedSquare=get_clicked_square(event.button.x,event.button.y);
                 SDL_RenderClear(g_Renderer);
                 render_base(g_Renderer);
-                highlight_square(clickedSquare, g_Renderer, pion);
+                isMovesShown=highlight_square(clickedSquare, g_Renderer, pion);
                 render_pawn(g_Renderer, pion);
+                if(isMovesShown==1)
+                {
+                    movement(clickedSquare, pion);
+                    render_pawn(g_Renderer, pion);
+                }
             }
             break;
+        default:
+            break;
         }
-        printf("fin boucle ");
     }
-    printf("après boucle");
+}
+
+void movement(SDL_Rect clickedSquare,pion pion[])
+{
+    for(int k=0;k<=32;k++)
+    {
+       if((clickedSquare.y==pion[k].y)/*&&(pion[k].isSelected==1)*/)
+        pion[k].y++;
+        printf("Posy : %d\n",pion[k].y);
+        printf("Posx : %d\n",pion[k].x);
+    }
 }
