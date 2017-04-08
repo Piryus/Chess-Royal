@@ -24,7 +24,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #endif
-
+/* Ancienne structure
 typedef struct pion
 {
     int isBlack; //0=blanc 1=noir
@@ -32,13 +32,13 @@ typedef struct pion
     int y;
     int isInInitPos; //1=position de départ 0=le pion a déjà été déplacé
     int isSelected;
-} pion;
+} pion;*/
 
-typedef struct square
+struct square
 {
-    int x;
-    int y;
-} square;
+    int pawn; //0=none 1=black 2=white
+    bool is_selected;
+};
 
 typedef struct date
 {
@@ -47,7 +47,7 @@ typedef struct date
     int a;
 } date;
 
-typedef struct game
+/*typedef struct game
 {
     int id;
     int ia;
@@ -56,14 +56,15 @@ typedef struct game
     int turn;
     date date;
     pion pions[32];
-} game;
+} game;*/
 
 //Prototypes des fonctions du plateau
-extern void jeu(SDL_Window *window, SDL_Renderer *renderer);
+extern void game(SDL_Window *window, SDL_Renderer *renderer);
+extern void initialize_pawn_pos(void);
 extern SDL_Rect get_clicked_square(int x, int y);
-extern int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *renderer, pion pion[32]);
-extern void render_pawn(SDL_Renderer *renderer, pion pion[32]);
-extern void init_pawn(pion pion[]);
+//extern int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *renderer, pion pion[32]);
+extern void render_pawn(SDL_Renderer *renderer);
+//extern void init_pawn(pion pion[]);
 extern int posy(int numcase);
 extern int posx(int numcase);
 extern int numcase_to_coord_y(int numcase);
