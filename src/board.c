@@ -1,22 +1,22 @@
 #include "defs.h"
 
 /* Fonction permettant d'afficher la base se trouvant sous l'échiquier*/
-void render_base(SDL_Renderer *g_Renderer)
+void render_base(SDL_Renderer *renderer)
 {
     SDL_Texture *bg = NULL;
     SDL_Rect bg_chess = {((WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, ((WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE};
     SDL_Rect square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
-    bg = loadIMG("sprites/wood.jpg", g_Renderer);
+    bg = loadIMG("sprites/wood.jpg", renderer);
     for(int i = 0; i <= (WINDOW_WIDTH / 512); i++)
     {
         for(int j = 0; j <= (WINDOW_HEIGHT / 512); j++)
         {
-            RendTex(bg, g_Renderer, 512 * i, 512 * j);
+            RendTex(bg, renderer, 512 * i, 512 * j);
         }
     }
-    SDL_SetRenderDrawColor(g_Renderer, 133, 44, 16, 255);
-    SDL_RenderFillRect(g_Renderer, &bg_chess);
-    SDL_RenderPresent(g_Renderer);
+    SDL_SetRenderDrawColor(renderer, 133, 44, 16, 255);
+    SDL_RenderFillRect(renderer, &bg_chess);
+    SDL_RenderPresent(renderer);
     for(int i = 0; i <= 7; i++)
     {
         for(int j = 0; j <= 7; j++)
@@ -25,17 +25,17 @@ void render_base(SDL_Renderer *g_Renderer)
             square.x = (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * i;
             if(((j + i) % 2 == 0))
             {
-                SDL_SetRenderDrawColor(g_Renderer, 209, 139, 71, 255);
-                SDL_RenderFillRect(g_Renderer, &square);
+                SDL_SetRenderDrawColor(renderer, 209, 139, 71, 255);
+                SDL_RenderFillRect(renderer, &square);
             }
             else
             {
-                SDL_SetRenderDrawColor(g_Renderer, 255, 206, 158, 255);
-                SDL_RenderFillRect(g_Renderer, &square);
+                SDL_SetRenderDrawColor(renderer, 255, 206, 158, 255);
+                SDL_RenderFillRect(renderer, &square);
             }
         }
     }
-    SDL_RenderPresent(g_Renderer);
+    SDL_RenderPresent(renderer);
 }
 /*Fonction transposant le numéro d'une case en coordonées (x)*/
 int numcase_to_coord_x(int numcase)
@@ -87,26 +87,26 @@ void init_pawn(pion pion[])
     }
 }
 //********************************************************************************************************************
-void render_pawn(SDL_Renderer *g_Renderer, pion pion[32])
+void render_pawn(SDL_Renderer *renderer, pion pion[32])
 {
     SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
-    pion_noir = loadIMG("sprites/blackpawn.png", g_Renderer);
-    pion_blanc = loadIMG("sprites/whitepawn.png", g_Renderer);
+    pion_noir = loadIMG("sprites/blackpawn.png", renderer);
+    pion_blanc = loadIMG("sprites/whitepawn.png", renderer);
     for(int i = 0; i <= 32; i++)
     {
         if(pion[i].isBlack == 0)
         {
-            RendTex(pion_blanc, g_Renderer, posx(pion[i].x), posy(pion[i].y));
+            RendTex(pion_blanc, renderer, posx(pion[i].x), posy(pion[i].y));
         }
         if(pion[i].isBlack == 1)
         {
-            RendTex(pion_noir, g_Renderer, posx(pion[i].x), posy(pion[i].y));
+            RendTex(pion_noir, renderer, posx(pion[i].x), posy(pion[i].y));
         }
     }
-    SDL_RenderPresent(g_Renderer);
+    SDL_RenderPresent(renderer);
 }
 //********************************************************************************************************************
-int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion[32])
+int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *renderer, pion pion[32])
 {
     int rendersquare = 1;
     int isMovesShown=0;
@@ -118,8 +118,8 @@ int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion
             if((clickedSquare.x == numcase_to_coord_x(pion[k].x)) && (clickedSquare.y == numcase_to_coord_y(pion[k].y)))
             {
                 printf("Un pion a ete detecte sur la case, selection de la case.\n");
-                SDL_SetRenderDrawColor(g_Renderer, 231, 252, 212, 255);
-                SDL_RenderFillRect(g_Renderer, &clickedSquare);
+                SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
+                SDL_RenderFillRect(renderer, &clickedSquare);
                 if(pion[k].isInInitPos == 1)   //Si le pion est en positon initiale = 2 cases
                 {
                     for(int b = 1; b <= 32; b++)   //on vérifie qu'il n'y ait pas de pion devant le pion
@@ -135,9 +135,9 @@ int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion
                     {
                         for(int c = 1; c <= 2; c++)
                         {
-                            dot = loadIMG("sprites/dot.png", g_Renderer);
-                            RendTex(dot, g_Renderer, posx(pion[k].x), posy(pion[k].y-c+3*pion[k].isBlack));//=+2 si blanc(isBlack=0)/=-2 si noir (isBlack=1)
-                            SDL_RenderPresent(g_Renderer);
+                            dot = loadIMG("sprites/dot.png", renderer);
+                            RendTex(dot, renderer, posx(pion[k].x), posy(pion[k].y-c+3*pion[k].isBlack));//=+2 si blanc(isBlack=0)/=-2 si noir (isBlack=1)
+                            SDL_RenderPresent(renderer);
                         }
                     }
 
@@ -146,7 +146,7 @@ int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion
         }
 
     }
-    SDL_RenderPresent(g_Renderer);
+    SDL_RenderPresent(renderer);
     return rendersquare;
 }
 /* Fonction permettant de renvoyer la case sur laquelle on a cliqué*/
@@ -171,16 +171,16 @@ SDL_Rect get_clicked_square(int x, int y)
     return square;
 }
 //********************************************************************************************************************
-void jeu(SDL_Window *g_Window, SDL_Renderer *g_Renderer)
+void jeu(SDL_Window *window, SDL_Renderer *renderer)
 {   int isMovesShown;
     pion pion[32];
     int stop=0;
     SDL_Event event;
     SDL_Rect clickedSquare;
-    SDL_RenderClear(g_Renderer);
-    render_base(g_Renderer);
+    SDL_RenderClear(renderer);
+    render_base(renderer);
     init_pawn(pion);
-    render_pawn(g_Renderer, pion);
+    render_pawn(renderer, pion);
     while(stop!=1)
     {
         SDL_WaitEvent(&event);
@@ -203,14 +203,14 @@ void jeu(SDL_Window *g_Window, SDL_Renderer *g_Renderer)
             if(event.button.button == SDL_BUTTON_LEFT)   // Bouton souris gauche
             {
                 clickedSquare=get_clicked_square(event.button.x,event.button.y);
-                SDL_RenderClear(g_Renderer);
-                render_base(g_Renderer);
-                isMovesShown=highlight_square(clickedSquare, g_Renderer, pion);
-                render_pawn(g_Renderer, pion);
+                SDL_RenderClear(renderer);
+                render_base(renderer);
+                isMovesShown=highlight_square(clickedSquare, renderer, pion);
+                render_pawn(renderer, pion);
                 if(isMovesShown==1)
                 {
                     movement(clickedSquare, pion);
-                    render_pawn(g_Renderer, pion);
+                    render_pawn(renderer, pion);
                 }
             }
             break;
@@ -224,7 +224,7 @@ void movement(SDL_Rect clickedSquare,pion pion[])
 {
     for(int k=0;k<=32;k++)
     {
-       if((clickedSquare.y==pion[k].y)/*&&(pion[k].isSelected==1)*/)
+       if((clickedSquare.y==pion[k].y+1)/*&&(pion[k].isSelected==1)*/)
         pion[k].y++;
         printf("Posy : %d\n",pion[k].y);
         printf("Posx : %d\n",pion[k].x);

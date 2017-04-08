@@ -13,7 +13,7 @@
 
 //Menu
 #define MENU_SPACING 50
-#define NB_MENU 4
+#define NB_MENU_BUTTONS 4
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -58,11 +58,11 @@ typedef struct game
     pion pions[32];
 } game;
 
-//Prototypes des fonctions
-extern void jeu(SDL_Window *g_Window, SDL_Renderer *g_Renderer);
+//Prototypes des fonctions du plateau
+extern void jeu(SDL_Window *window, SDL_Renderer *renderer);
 extern SDL_Rect get_clicked_square(int x, int y);
-extern int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *g_Renderer, pion pion[32]);
-extern void render_pawn(SDL_Renderer *g_Renderer, pion pion[32]);
+extern int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *renderer, pion pion[32]);
+extern void render_pawn(SDL_Renderer *renderer, pion pion[32]);
 extern void init_pawn(pion pion[]);
 extern int posy(int numcase);
 extern int posx(int numcase);
@@ -71,7 +71,14 @@ extern int numcase_to_coord_x(int numcase);
 extern int numcase_to_coord_y(int numcase);
 
 //SDL Functions
-extern int RendTex(SDL_Texture *texture, SDL_Renderer *g_Renderer, int x, int y);
-extern SDL_Texture *loadFont_Blended(SDL_Renderer *g_Renderer, TTF_Font *police, char texte[], int red, int green, int blue);
-extern SDL_Texture *loadIMG(char path[], SDL_Renderer *g_Renderer);
-extern int init(SDL_Window **g_Window,SDL_Renderer **g_Renderer);
+extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
+extern SDL_Texture *loadFont_Blended(SDL_Renderer *renderer, TTF_Font *police, char texte[], int red, int green, int blue);
+extern SDL_Texture *loadIMG(char path[], SDL_Renderer *renderer);
+extern int init(SDL_Window **window,SDL_Renderer **renderer);
+
+//Menu
+extern void menu(void);
+extern void render_menu_buttons(SDL_Renderer *renderer);
+extern void render_menu_background(SDL_Renderer *renderer);
+extern void render_game_title(SDL_Renderer *renderer);
+
