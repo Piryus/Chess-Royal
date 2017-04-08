@@ -19,3 +19,7 @@
 # Debug files
 *.dSYM/
 *.su
+
+#CodeBlocks files
+*.layout
+*.depend
