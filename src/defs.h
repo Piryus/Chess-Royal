@@ -37,7 +37,8 @@ typedef struct pion
 struct square
 {
     int pawn; //0=none 1=black -1=white
-    bool is_selected;
+    int isSelected;
+    int isMoveOk;
 };
 
 typedef struct date

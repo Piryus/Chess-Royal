@@ -16,17 +16,6 @@ We define our chess as below :
 7 |_|_|_|_|_|_|_|_|
 
 Example : X = square[2][5]
-
-And alternative square numbers (used by some functions) :
-   __ __ __ __ __ __ __ __
-0 |01|02|03|04|05|06|07|08|
-1 |09|10|11|12|13|14|15|16|
-2 |17|18|19|20|21|22|23|24|
-3 |25|26|27|28|29|30|31|32|
-4 |33|34|35|36|37|38|39|40|
-5 |41|42|43|44|45|46|47|48|
-6 |49|50|51|52|53|54|55|56|
-7 |57|58|59|60|61|62|63|64|
 */
 
 /* Fonction permettant d'afficher la base se trouvant sous l'échiquier*/
@@ -86,6 +75,7 @@ void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
         {
             for(int j=0; j<=7; j++)
             {
+                square[i][j].isSelected=0;
                 if((j<2)||(j>7))
                 {
                     max_move=2;
@@ -94,7 +84,6 @@ void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
                         &&(clickedSquare.y==numcase_to_coord_y(j))
                         &&(square[i][j].pawn!=0))
                 {
-                    printf("Un pion a ete detecte sur la case, selection de la case...\n");
                     SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
                     SDL_RenderFillRect(renderer, &clickedSquare);
                     for(int k = 1; k <= max_move; k++)
@@ -104,15 +93,17 @@ void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
                             dot = loadIMG("sprites/dot.png", renderer);
                             RendTex(dot, renderer, posx(i), posy(j+(k*square[i][j].pawn)));
                             SDL_RenderPresent(renderer);
+                            square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
                         }
                     }
+                    square[i][j].isSelected=1;
                 }
             }
         }
     }
     SDL_RenderPresent(renderer);
 }
-/* Fonction permettant de renvoyer la case sur laquelle on a cliqué*/
+// Fonction permettant de renvoyer la case sur laquelle on a cliqué
 SDL_Rect get_clicked_square(int x, int y)
 {
     SDL_Rect square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
@@ -173,6 +164,7 @@ void game(SDL_Renderer *renderer)
                 render_background(renderer);
                 render_base(renderer);
                 render_squares(renderer);
+                move_pawn_to_clicked_square(clickedSquare);
                 show_possible_moves(clickedSquare,renderer);
                 render_pawns(renderer);
 
@@ -202,6 +194,8 @@ void initialize_pawns_pos(void)
             {
                 square[i][j].pawn=0;
             }
+            square[i][j].isSelected=0;
+            square[i][j].isMoveOk=0;
         }
     }
 }
@@ -249,4 +243,27 @@ int posy(int numcase)
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
 
-//void move_pawn_to_clicked_square(SDL_Rect clicked_s)
+void move_pawn_to_clicked_square(SDL_Rect clickedSquare)
+{
+    for(int i=0; i<=7; i++)
+    {
+        for(int j=0; j<=7; j++)
+        {
+            if((square[i][j].isMoveOk==1)&&(clickedSquare.x==numcase_to_coord_x(i))&&(clickedSquare.y==numcase_to_coord_y(j)))
+            {
+                for(int k=0; k<=7; k++)
+                {
+                    for(int l=0; l<=7; l++)
+                    {
+                        if((square[k][l].isSelected==1))
+                        {
+                        square[i][j].pawn=square[k][l].pawn;
+                        square[k][l].pawn=0;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
