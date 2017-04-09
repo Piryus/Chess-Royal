@@ -36,7 +36,7 @@ typedef struct pion
 
 struct square
 {
-    int pawn; //0=none 1=black 2=white
+    int pawn; //0=none 1=black -1=white
     bool is_selected;
 };
 
@@ -58,18 +58,21 @@ typedef struct date
     pion pions[32];
 } game;*/
 
-//Prototypes des fonctions du plateau
-extern void game(SDL_Window *window, SDL_Renderer *renderer);
-extern void initialize_pawn_pos(void);
+//Prototypes des fonctions gérant le jeu
+extern void game(SDL_Renderer *renderer);
+extern void initialize_pawns_pos(void);
 extern SDL_Rect get_clicked_square(int x, int y);
-//extern int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *renderer, pion pion[32]);
-extern void render_pawn(SDL_Renderer *renderer);
-//extern void init_pawn(pion pion[]);
 extern int posy(int numcase);
 extern int posx(int numcase);
 extern int numcase_to_coord_y(int numcase);
 extern int numcase_to_coord_x(int numcase);
-extern int numcase_to_coord_y(int numcase);
+extern void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer);
+
+//Fonctions affichage
+extern void render_background(SDL_Renderer *renderer);
+extern void render_base(SDL_Renderer *renderer);
+extern void render_squares(SDL_Renderer *renderer);
+extern void render_pawns(SDL_Renderer *renderer);
 
 //SDL Functions
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);

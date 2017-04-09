@@ -32,9 +32,14 @@ And alternative square numbers (used by some functions) :
 /* Fonction permettant d'afficher la base se trouvant sous l'échiquier*/
 void render_base(SDL_Renderer *renderer)
 {
-    SDL_Texture *bg = NULL;
     SDL_Rect bg_chess = {((WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, ((WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE};
-    SDL_Rect square_rect = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
+    SDL_SetRenderDrawColor(renderer, 133, 44, 16, 255);
+    SDL_RenderFillRect(renderer, &bg_chess);
+    SDL_RenderPresent(renderer);
+}
+void render_background(SDL_Renderer *renderer)
+{
+    SDL_Texture *bg = NULL;
     bg = loadIMG("sprites/wood.jpg", renderer);
     for(int i = 0; i <= (WINDOW_WIDTH / 512); i++)
     {
@@ -43,9 +48,12 @@ void render_base(SDL_Renderer *renderer)
             RendTex(bg, renderer, 512 * i, 512 * j);
         }
     }
-    SDL_SetRenderDrawColor(renderer, 133, 44, 16, 255);
-    SDL_RenderFillRect(renderer, &bg_chess);
     SDL_RenderPresent(renderer);
+
+}
+void render_squares(SDL_Renderer *renderer)
+{
+    SDL_Rect square_rect = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
     for(int i = 0; i <= 7; i++)
     {
         for(int j = 0; j <= 7; j++)
@@ -66,118 +74,44 @@ void render_base(SDL_Renderer *renderer)
     }
     SDL_RenderPresent(renderer);
 }
-/*Fonction transposant le numéro d'une case en coordonées (x)
-int numcase_to_coord_x(int numcase)
-{
-    return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
-}
-/* Fonction transposant le numéro d'une case en coordonées (y)
-int numcase_to_coord_y(int numcase)
-{
-    return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
-}
+
 //********************************************************************************************************************
-int posx(int numcase)
+void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
 {
-    return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
-}
-//********************************************************************************************************************
-int posy(int numcase)
-{
-    return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
-}
-/* Fonction initialisant la position de départ des pions ainsi que leurs couleurs
-void init_pawn(pion pion[])
-{
-    int k = 0;
-    for(int i = 0; i < 8; i++)
-    {
-        for(int j = 0; j <= 1; j++)
-        {
-            pion[k].isBlack = 1;
-            pion[k].x = i;
-            pion[k].y = j;
-            pion[k].isInInitPos = 1;
-            pion[k].isSelected = 0;
-            k++;
-        }
-    }
-    for(int i = 0; i <= 7; i++)
-    {
-        for(int j = 6; j <= 7; j++)
-        {
-            pion[k].isBlack = 0;
-            pion[k].x = i;
-            pion[k].y = j;
-            pion[k].isInInitPos = 1;
-            pion[k].isSelected = 0;
-            k++;
-        }
-    }
-}
-//********************************************************************************************************************
-void render_pawn(SDL_Renderer *renderer, pion pion[32])
-{
-    SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
-    pion_noir = loadIMG("sprites/blackpawn.png", renderer);
-    pion_blanc = loadIMG("sprites/whitepawn.png", renderer);
-    for(int i = 0; i <= 32; i++)
-    {
-        if(pion[i].isBlack == 0)
-        {
-            RendTex(pion_blanc, renderer, posx(pion[i].x), posy(pion[i].y));
-        }
-        if(pion[i].isBlack == 1)
-        {
-            RendTex(pion_noir, renderer, posx(pion[i].x), posy(pion[i].y));
-        }
-    }
-    SDL_RenderPresent(renderer);
-}
-//********************************************************************************************************************
-int highlight_square(SDL_Rect clickedSquare, SDL_Renderer *renderer, pion pion[32])
-{
-    int rendersquare = 1;
-    int isMovesShown=0;
+    int max_move=1;
     SDL_Texture *dot = NULL;
     if((clickedSquare.x!=0)&&(clickedSquare.y!=0))
     {
-        for(int k = 1; k <= 32; k++)
+        for(int i=0; i<=7; i++)
         {
-            if((clickedSquare.x == numcase_to_coord_x(pion[k].x)) && (clickedSquare.y == numcase_to_coord_y(pion[k].y)))
+            for(int j=0; j<=7; j++)
             {
-                printf("Un pion a ete detecte sur la case, selection de la case.\n");
-                SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
-                SDL_RenderFillRect(renderer, &clickedSquare);
-                if(pion[k].isInInitPos == 1)   //Si le pion est en positon initiale = 2 cases
+                if((j<2)||(j>7))
                 {
-                    for(int b = 1; b <= 32; b++)   //on vérifie qu'il n'y ait pas de pion devant le pion
+                    max_move=2;
+                }
+                if((clickedSquare.x==numcase_to_coord_x(i))
+                        &&(clickedSquare.y==numcase_to_coord_y(j))
+                        &&(square[i][j].pawn!=0))
+                {
+                    printf("Un pion a ete detecte sur la case, selection de la case...\n");
+                    SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
+                    SDL_RenderFillRect(renderer, &clickedSquare);
+                    for(int k = 1; k <= max_move; k++)
                     {
-                        if(((numcase_to_coord_x(pion[k].y + 1) == numcase_to_coord_x(pion[b].y))&&(pion[k].isBlack == 1))
-                                ||((numcase_to_coord_x(pion[k].y - 1) == numcase_to_coord_x(pion[b].y)) && (pion[k].isBlack == 0)))
-                        {
-                            printf("Pion detecte devant, aucun mouvement à afficher !\n");
-                            rendersquare = 0;
-                        }
-                    }
-                    if(rendersquare == 1)
-                    {
-                        for(int c = 1; c <= 2; c++)
+                        if(square[i][j+(k*square[i][j].pawn)].pawn==0)
                         {
                             dot = loadIMG("sprites/dot.png", renderer);
-                            RendTex(dot, renderer, posx(pion[k].x), posy(pion[k].y-c+3*pion[k].isBlack));//=+2 si blanc(isBlack=0)/=-2 si noir (isBlack=1)
+                            RendTex(dot, renderer, posx(i), posy(j+(k*square[i][j].pawn)));
                             SDL_RenderPresent(renderer);
                         }
                     }
-
                 }
             }
         }
-
     }
     SDL_RenderPresent(renderer);
-    return rendersquare;
-}*/
+}
 /* Fonction permettant de renvoyer la case sur laquelle on a cliqué*/
 SDL_Rect get_clicked_square(int x, int y)
 {
@@ -200,16 +134,19 @@ SDL_Rect get_clicked_square(int x, int y)
     return square;
 }
 //********************************************************************************************************************
-void game(SDL_Window *window, SDL_Renderer *renderer)
-{   /*int isMovesShown;
+void game(SDL_Renderer *renderer)
+{
+    /*int isMovesShown;
     pion pion[32];*/
     int stop=0;
     SDL_Event event;
     SDL_Rect clickedSquare;
     SDL_RenderClear(renderer);
+    render_background(renderer);
     render_base(renderer);
+    render_squares(renderer);
     initialize_pawns_pos();
-    render_pawn(renderer);
+    render_pawns(renderer);
     while(stop!=1)
     {
         SDL_WaitEvent(&event);
@@ -233,14 +170,12 @@ void game(SDL_Window *window, SDL_Renderer *renderer)
             {
                 clickedSquare=get_clicked_square(event.button.x,event.button.y);
                 SDL_RenderClear(renderer);
+                render_background(renderer);
                 render_base(renderer);
-                //isMovesShown=highlight_square(clickedSquare, renderer, pion);
-                //render_pawn(renderer, pion);
-                /*if(isMovesShown==1)
-                {
-                    movement(clickedSquare, pion);
-                    render_pawn(renderer, pion);
-                }*/
+                render_squares(renderer);
+                show_possible_moves(clickedSquare,renderer);
+                render_pawns(renderer);
+
             }
             break;
         default:
@@ -257,21 +192,21 @@ void initialize_pawns_pos(void)
         {
             if(j<2)
             {
-               square[i][j].pawn=1;
+                square[i][j].pawn=1;
             }
             else if(j>5)
             {
-               square[i][j].pawn=2;
+                square[i][j].pawn=-1;
             }
             else
             {
-               square[i][j].pawn=0;
+                square[i][j].pawn=0;
             }
         }
     }
 }
 
-void render_pawn(SDL_Renderer *renderer)
+void render_pawns(SDL_Renderer *renderer)
 {
     SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
     pion_noir = loadIMG("sprites/blackpawn.png", renderer);
@@ -280,7 +215,7 @@ void render_pawn(SDL_Renderer *renderer)
     {
         for(int j=0; j<=7; j++)
         {
-            if(square[i][j].pawn==2)
+            if(square[i][j].pawn==-1)
             {
                 RendTex(pion_blanc, renderer, posx(i), posy(j));
             }
@@ -293,12 +228,12 @@ void render_pawn(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
-//Fonction transposant le numéro d'une case en coordonées (x)
+//Fonction transposant le numéro d'une case en abscisses (de 0 à 8) en abscisse du coin supérieur gauche de cette case(x)
 int numcase_to_coord_x(int numcase)
 {
     return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
 }
-// Fonction transposant le numéro d'une case en coordonées (y)
+//Fonction transposant le numéro d'une case en abscisses (de 0 à 8) en coordonées du coin supérieur gauche de cette case(x)
 int numcase_to_coord_y(int numcase)
 {
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
@@ -313,3 +248,5 @@ int posy(int numcase)
 {
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
+
+//void move_pawn_to_clicked_square(SDL_Rect clicked_s)

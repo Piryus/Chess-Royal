@@ -28,7 +28,7 @@ void menu(void)
                 if(NULL!=menu)
                     SDL_DestroyTexture(menu);
                 SDL_RenderClear(renderer);
-                game(window,renderer);
+                game(renderer);
                 continuer=0;
                 break;
             case SDLK_2:

@@ -1,5 +1,5 @@
 #include "defs.h"
-int init(SDL_Window **g_Window,SDL_Renderer **g_Renderer)
+int init(SDL_Window **g_Window,SDL_Renderer **renderer)
 {
     SDL_Surface *icon=NULL;
     if(0 != SDL_Init(SDL_INIT_VIDEO))
@@ -12,7 +12,7 @@ int init(SDL_Window **g_Window,SDL_Renderer **g_Renderer)
         printf("Erreur TTF_Init : %s\n", SDL_GetError());
         return -1;
     }
-    if(0!=SDL_CreateWindowAndRenderer(WINDOW_WIDTH,WINDOW_HEIGHT,SDL_WINDOW_SHOWN,g_Window,g_Renderer))
+    if(0!=SDL_CreateWindowAndRenderer(WINDOW_WIDTH,WINDOW_HEIGHT,SDL_WINDOW_SHOWN,g_Window,renderer))
     {
         printf("Erreur SDL_CreateWindowAndRenderer : %s\n", SDL_GetError());
         return -1;
@@ -23,7 +23,7 @@ int init(SDL_Window **g_Window,SDL_Renderer **g_Renderer)
     return 0;
 }
 
-SDL_Texture *loadIMG(char path[], SDL_Renderer *g_Renderer)
+SDL_Texture *loadIMG(char path[], SDL_Renderer *renderer)
 {
     SDL_Surface *surface = NULL;
     SDL_Texture *texture=NULL;
@@ -33,7 +33,7 @@ SDL_Texture *loadIMG(char path[], SDL_Renderer *g_Renderer)
         printf("Erreur IMG_Load : %s\n", IMG_GetError());
         return NULL;
     }
-    texture = SDL_CreateTextureFromSurface(g_Renderer,surface);
+    texture = SDL_CreateTextureFromSurface(renderer,surface);
     SDL_FreeSurface(surface);
     if(texture==NULL)
     {
@@ -43,13 +43,13 @@ SDL_Texture *loadIMG(char path[], SDL_Renderer *g_Renderer)
     return texture;
 }
 
-SDL_Texture *loadFont_Blended(SDL_Renderer *g_Renderer, TTF_Font *police, char texte[], int red, int green, int blue)
+SDL_Texture *loadFont_Blended(SDL_Renderer *renderer, TTF_Font *police, char texte[], int red, int green, int blue)
 {
     SDL_Surface *surface=NULL;
     SDL_Texture *texture=NULL;
     SDL_Color couleur={red, green, blue, 255};
     surface = TTF_RenderText_Blended(police, texte, couleur);
-    texture = SDL_CreateTextureFromSurface(g_Renderer,surface);
+    texture = SDL_CreateTextureFromSurface(renderer,surface);
     SDL_FreeSurface(surface);
     if(texture==NULL)
     {
@@ -59,7 +59,7 @@ SDL_Texture *loadFont_Blended(SDL_Renderer *g_Renderer, TTF_Font *police, char t
     return texture;
 }
 
-int RendTex(SDL_Texture *texture, SDL_Renderer *g_Renderer, int x, int y)
+int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y)
 {
     SDL_Rect rect;
     rect.x=x;
@@ -69,7 +69,7 @@ int RendTex(SDL_Texture *texture, SDL_Renderer *g_Renderer, int x, int y)
         printf("Erreur SDL_QueryTexture : %s\n",SDL_GetError());
         return -1;
     }
-    if(0!=SDL_RenderCopy(g_Renderer,texture,NULL,&rect))
+    if(0!=SDL_RenderCopy(renderer,texture,NULL,&rect))
     {
         printf("Erreur SDL_RenderCopy : %s\n",SDL_GetError());
         return -1;
