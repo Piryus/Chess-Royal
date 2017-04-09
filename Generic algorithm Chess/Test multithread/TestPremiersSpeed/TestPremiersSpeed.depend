@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1491743562 source:e:\louis\generic algorithm chess\test multithread\testpremiersspeed\main.c
+	<stdio.h>
+	<stdlib.h>
+

@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1491663284 source:e:\louis\generic algorithm chess\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<process.h>
+	<windows.h>
+
