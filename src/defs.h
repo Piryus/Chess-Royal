@@ -41,12 +41,12 @@ We define our chess as below :
 Example : X = square[2][5]
 */
 
-struct square
+typedef struct Square
 {
     int pawn; //0=none 1=black -1=white
     int isSelected;
     int isMoveOk;
-};
+} Square;
 
 typedef struct date
 {
@@ -68,21 +68,29 @@ typedef struct date
 
 //Prototypes des fonctions gérant le jeu
 extern void game(SDL_Renderer *renderer);
-extern void initialize_pawns_pos(void);
+extern void initialize_pawns_pos(Square square[][8]);
 extern SDL_Rect get_clicked_square(int x, int y);
 extern int posy(int numcase);
 extern int posx(int numcase);
 extern int numcase_to_coord_y(int numcase);
 extern int numcase_to_coord_x(int numcase);
+<<<<<<< HEAD
 extern void reset_OK_moves(void);
 extern void move_pawn_to(SDL_Rect clickedSquare);
+=======
+extern void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8]);
+>>>>>>> origin/master
 
 //Fonctions affichage
 extern void render_background(SDL_Renderer *renderer);
 extern void render_base(SDL_Renderer *renderer);
 extern void render_squares(SDL_Renderer *renderer);
+<<<<<<< HEAD
 extern void render_pawns(SDL_Renderer *renderer);
 extern void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer);
+=======
+extern void render_pawns(SDL_Renderer *renderer,Square square[][8]);
+>>>>>>> origin/master
 
 //SDL Functions
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
