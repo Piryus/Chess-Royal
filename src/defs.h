@@ -24,15 +24,22 @@
 #include <SDL2/SDL_ttf.h>
 
 #endif
-/* Ancienne structure
-typedef struct pion
-{
-    int isBlack; //0=blanc 1=noir
-    int x;
-    int y;
-    int isInInitPos; //1=position de départ 0=le pion a déjà été déplacé
-    int isSelected;
-} pion;*/
+
+/*
+We define our chess as below :
+   0 1 2 3 4 5 6 7
+   _ _ _ _ _ _ _ _
+0 |_|_|_|_|_|_|_|_|
+1 |_|_|_|_|_|_|_|_|
+2 |_|_|_|_|_|_|_|_|
+3 |_|_|_|_|_|_|_|_|
+4 |_|_|_|_|_|_|_|_|
+5 |_|_|X|_|_|_|_|_|
+6 |_|_|_|_|_|_|_|_|
+7 |_|_|_|_|_|_|_|_|
+
+Example : X = square[2][5]
+*/
 
 struct square
 {
@@ -67,13 +74,15 @@ extern int posy(int numcase);
 extern int posx(int numcase);
 extern int numcase_to_coord_y(int numcase);
 extern int numcase_to_coord_x(int numcase);
-extern void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer);
+extern void reset_OK_moves(void);
+extern void move_pawn_to(SDL_Rect clickedSquare);
 
 //Fonctions affichage
 extern void render_background(SDL_Renderer *renderer);
 extern void render_base(SDL_Renderer *renderer);
 extern void render_squares(SDL_Renderer *renderer);
 extern void render_pawns(SDL_Renderer *renderer);
+extern void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer);
 
 //SDL Functions
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
@@ -86,4 +95,6 @@ extern void menu(void);
 extern void render_menu_buttons(SDL_Renderer *renderer);
 extern void render_menu_background(SDL_Renderer *renderer);
 extern void render_game_title(SDL_Renderer *renderer);
+
+struct square square[8][8];
 
