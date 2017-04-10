@@ -1,6 +1,6 @@
 #include "defs.h"
 
-struct square square[8][8];
+
 
 /*
 We define our chess as below :
@@ -65,7 +65,7 @@ void render_squares(SDL_Renderer *renderer)
 }
 
 //********************************************************************************************************************
-void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
+void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8])
 {
     int max_move=1;
     SDL_Texture *dot = NULL;
@@ -130,14 +130,15 @@ void game(SDL_Renderer *renderer)
     /*int isMovesShown;
     pion pion[32];*/
     int stop=0;
+    Square square[8][8];
     SDL_Event event;
     SDL_Rect clickedSquare;
     SDL_RenderClear(renderer);
     render_background(renderer);
     render_base(renderer);
     render_squares(renderer);
-    initialize_pawns_pos();
-    render_pawns(renderer);
+    initialize_pawns_pos(square);
+    render_pawns(renderer,square);
     while(stop!=1)
     {
         SDL_WaitEvent(&event);
@@ -164,9 +165,9 @@ void game(SDL_Renderer *renderer)
                 render_background(renderer);
                 render_base(renderer);
                 render_squares(renderer);
-                move_pawn_to_clicked_square(clickedSquare);
-                show_possible_moves(clickedSquare,renderer);
-                render_pawns(renderer);
+                move_pawn_to_clicked_square(clickedSquare,square);
+                show_possible_moves(clickedSquare,renderer,square);
+                render_pawns(renderer,square);
 
             }
             break;
@@ -176,7 +177,7 @@ void game(SDL_Renderer *renderer)
     }
 }
 
-void initialize_pawns_pos(void)
+void initialize_pawns_pos(Square square[][8])
 {
     for(int i=0; i<=7; i++)
     {
@@ -200,7 +201,7 @@ void initialize_pawns_pos(void)
     }
 }
 
-void render_pawns(SDL_Renderer *renderer)
+void render_pawns(SDL_Renderer *renderer,Square square[][8])
 {
     SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
     pion_noir = loadIMG("sprites/blackpawn.png", renderer);
@@ -243,7 +244,7 @@ int posy(int numcase)
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
 
-void move_pawn_to_clicked_square(SDL_Rect clickedSquare)
+void move_pawn_to_clicked_square(SDL_Rect clickedSquare,Square square[][8])
 {
     for(int i=0; i<=7; i++)
     {
