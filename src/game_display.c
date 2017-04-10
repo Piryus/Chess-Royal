@@ -17,37 +17,20 @@ Example : X = square[2][5]
 //********************************************************************************************************************
 void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
 {
-    int max_move=1;
-    SDL_Texture *dot = NULL;
-    if((clickedSquare.x!=0)&&(clickedSquare.y!=0))
+    SDL_Texture *dot=NULL;
+    for(int i=0; i<=7; i++)
     {
-        for(int i=0; i<=7; i++)
+        for(int j=0; j<=7; j++)
         {
-            for(int j=0; j<=7; j++)
+            if(square[i][j].isSelected==1)
             {
-                square[i][j].isSelected=0;
-                if((j<2)||(j>7))
-                {
-                    max_move=2;
-                }
-                if((clickedSquare.x==numcase_to_coord_x(i))
-                        &&(clickedSquare.y==numcase_to_coord_y(j))
-                        &&(square[i][j].pawn!=0))
-                {
-                    SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
-                    SDL_RenderFillRect(renderer, &clickedSquare);
-                    for(int k = 1; k <= max_move; k++)
-                    {
-                        if(square[i][j+(k*square[i][j].pawn)].pawn==0)
-                        {
-                            dot = loadIMG("sprites/dot.png", renderer);
-                            RendTex(dot, renderer, posx(i), posy(j+(k*square[i][j].pawn)));
-                            SDL_RenderPresent(renderer);
-                            square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
-                        }
-                    }
-                    square[i][j].isSelected=1;
-                }
+                SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
+                SDL_RenderFillRect(renderer, &clickedSquare);
+            }
+            if(square[i][j].isMoveOk==1)
+            {
+                dot = loadIMG("sprites/dot.png", renderer);
+                RendTex(dot, renderer, posx(i), posy(j));
             }
         }
     }

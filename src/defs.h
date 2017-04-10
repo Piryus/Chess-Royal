@@ -41,12 +41,12 @@ We define our chess as below :
 Example : X = square[2][5]
 */
 
-typedef struct Square
+struct square
 {
     int pawn; //0=none 1=black -1=white
     int isSelected;
     int isMoveOk;
-} Square;
+};
 
 typedef struct date
 {
@@ -68,41 +68,33 @@ typedef struct date
 
 //Prototypes des fonctions gérant le jeu
 extern void game(SDL_Renderer *renderer);
-extern void initialize_pawns_pos(Square square[][8]);
+extern void initialize_pawns_pos(void);
 extern SDL_Rect get_clicked_square(int x, int y);
 extern int posy(int numcase);
 extern int posx(int numcase);
 extern int numcase_to_coord_y(int numcase);
 extern int numcase_to_coord_x(int numcase);
-<<<<<<< HEAD
 extern void reset_OK_moves(void);
 extern void move_pawn_to(SDL_Rect clickedSquare);
-=======
-extern void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8]);
->>>>>>> origin/master
+extern void get_authorized_moves(SDL_Rect rect);
 
-//Fonctions affichage
+//Fonctions gérant l'affichage en jeu
 extern void render_background(SDL_Renderer *renderer);
 extern void render_base(SDL_Renderer *renderer);
 extern void render_squares(SDL_Renderer *renderer);
-<<<<<<< HEAD
 extern void render_pawns(SDL_Renderer *renderer);
 extern void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer);
-=======
-extern void render_pawns(SDL_Renderer *renderer,Square square[][8]);
->>>>>>> origin/master
 
-//SDL Functions
+//Fonctions "raccourcis" SDL
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
 extern SDL_Texture *loadFont_Blended(SDL_Renderer *renderer, TTF_Font *police, char texte[], int red, int green, int blue);
 extern SDL_Texture *loadIMG(char path[], SDL_Renderer *renderer);
 extern int init(SDL_Window **window,SDL_Renderer **renderer);
 
-//Menu
+//Fonctions utilisées par le menu
 extern void menu(void);
 extern void render_menu_buttons(SDL_Renderer *renderer);
 extern void render_menu_background(SDL_Renderer *renderer);
 extern void render_game_title(SDL_Renderer *renderer);
 
 struct square square[8][8];
-

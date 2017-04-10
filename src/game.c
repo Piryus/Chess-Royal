@@ -1,112 +1,6 @@
 #include "defs.h"
 
-<<<<<<< HEAD:src/game.c
 
-=======
-
-
-/*
-We define our chess as below :
-   0 1 2 3 4 5 6 7
-   _ _ _ _ _ _ _ _
-0 |_|_|_|_|_|_|_|_|
-1 |_|_|_|_|_|_|_|_|
-2 |_|_|_|_|_|_|_|_|
-3 |_|_|_|_|_|_|_|_|
-4 |_|_|_|_|_|_|_|_|
-5 |_|_|X|_|_|_|_|_|
-6 |_|_|_|_|_|_|_|_|
-7 |_|_|_|_|_|_|_|_|
-
-Example : X = square[2][5]
-*/
-
-/* Fonction permettant d'afficher la base se trouvant sous l'échiquier*/
-void render_base(SDL_Renderer *renderer)
-{
-    SDL_Rect bg_chess = {((WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, ((WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE};
-    SDL_SetRenderDrawColor(renderer, 133, 44, 16, 255);
-    SDL_RenderFillRect(renderer, &bg_chess);
-    SDL_RenderPresent(renderer);
-}
-void render_background(SDL_Renderer *renderer)
-{
-    SDL_Texture *bg = NULL;
-    bg = loadIMG("sprites/wood.jpg", renderer);
-    for(int i = 0; i <= (WINDOW_WIDTH / 512); i++)
-    {
-        for(int j = 0; j <= (WINDOW_HEIGHT / 512); j++)
-        {
-            RendTex(bg, renderer, 512 * i, 512 * j);
-        }
-    }
-    SDL_RenderPresent(renderer);
-
-}
-void render_squares(SDL_Renderer *renderer)
-{
-    SDL_Rect square_rect = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
-    for(int i = 0; i <= 7; i++)
-    {
-        for(int j = 0; j <= 7; j++)
-        {
-            square_rect.y = (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * j;
-            square_rect.x = (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * i;
-            if(((j + i) % 2 == 0))
-            {
-                SDL_SetRenderDrawColor(renderer, 209, 139, 71, 255);
-                SDL_RenderFillRect(renderer, &square_rect);
-            }
-            else
-            {
-                SDL_SetRenderDrawColor(renderer, 255, 206, 158, 255);
-                SDL_RenderFillRect(renderer, &square_rect);
-            }
-        }
-    }
-    SDL_RenderPresent(renderer);
-}
-
-//********************************************************************************************************************
-void show_possible_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8])
-{
-    int max_move=1;
-    SDL_Texture *dot = NULL;
-    if((clickedSquare.x!=0)&&(clickedSquare.y!=0))
-    {
-        for(int i=0; i<=7; i++)
-        {
-            for(int j=0; j<=7; j++)
-            {
-                square[i][j].isSelected=0;
-                if((j<2)||(j>7))
-                {
-                    max_move=2;
-                }
-                if((clickedSquare.x==numcase_to_coord_x(i))
-                        &&(clickedSquare.y==numcase_to_coord_y(j))
-                        &&(square[i][j].pawn!=0))
-                {
-                    SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
-                    SDL_RenderFillRect(renderer, &clickedSquare);
-                    for(int k = 1; k <= max_move; k++)
-                    {
-                        if(square[i][j+(k*square[i][j].pawn)].pawn==0)
-                        {
-                            dot = loadIMG("sprites/dot.png", renderer);
-                            RendTex(dot, renderer, posx(i), posy(j+(k*square[i][j].pawn)));
-                            SDL_RenderPresent(renderer);
-                            square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
-                        }
-                    }
-                    square[i][j].isSelected=1;
-                }
-            }
-        }
-    }
-    SDL_RenderPresent(renderer);
-}
->>>>>>> origin/master:src/board.c
 // Fonction permettant de renvoyer la case sur laquelle on a cliqué
 SDL_Rect get_clicked_square(int x, int y)
 {
@@ -134,15 +28,14 @@ void game(SDL_Renderer *renderer)
     /*int isMovesShown;
     pion pion[32];*/
     int stop=0;
-    Square square[8][8];
     SDL_Event event;
     SDL_Rect clickedSquare;
     SDL_RenderClear(renderer);
     render_background(renderer);
     render_base(renderer);
     render_squares(renderer);
-    initialize_pawns_pos(square);
-    render_pawns(renderer,square);
+    initialize_pawns_pos();
+    render_pawns(renderer);
     while(stop!=1)
     {
         SDL_WaitEvent(&event);
@@ -169,16 +62,11 @@ void game(SDL_Renderer *renderer)
                 render_background(renderer);
                 render_base(renderer);
                 render_squares(renderer);
-<<<<<<< HEAD:src/game.c
                 move_pawn_to(clickedSquare);
+                get_authorized_moves(clickedSquare);
                 render_authorized_moves(clickedSquare,renderer);
                 render_pawns(renderer);
-=======
-                move_pawn_to_clicked_square(clickedSquare,square);
-                show_possible_moves(clickedSquare,renderer,square);
-                render_pawns(renderer,square);
->>>>>>> origin/master:src/board.c
-
+                reset_OK_moves();
             }
             break;
         default:
@@ -187,7 +75,7 @@ void game(SDL_Renderer *renderer)
     }
 }
 
-void initialize_pawns_pos(Square square[][8])
+void initialize_pawns_pos(void)
 {
     for(int i=0; i<=7; i++)
     {
@@ -211,31 +99,6 @@ void initialize_pawns_pos(Square square[][8])
     }
 }
 
-<<<<<<< HEAD:src/game.c
-=======
-void render_pawns(SDL_Renderer *renderer,Square square[][8])
-{
-    SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
-    pion_noir = loadIMG("sprites/blackpawn.png", renderer);
-    pion_blanc = loadIMG("sprites/whitepawn.png", renderer);
-    for(int i = 0; i<=7; i++)
-    {
-        for(int j=0; j<=7; j++)
-        {
-            if(square[i][j].pawn==-1)
-            {
-                RendTex(pion_blanc, renderer, posx(i), posy(j));
-            }
-            else if(square[i][j].pawn==1)
-            {
-                RendTex(pion_noir, renderer, posx(i), posy(j));
-            }
-        }
-    }
-    SDL_RenderPresent(renderer);
-}
-
->>>>>>> origin/master:src/board.c
 //Fonction transposant le numéro d'une case en abscisses (de 0 à 8) en abscisse du coin supérieur gauche de cette case(x)
 int numcase_to_coord_x(int numcase)
 {
@@ -257,11 +120,7 @@ int posy(int numcase)
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
 
-<<<<<<< HEAD:src/game.c
 void move_pawn_to(SDL_Rect clickedSquare)
-=======
-void move_pawn_to_clicked_square(SDL_Rect clickedSquare,Square square[][8])
->>>>>>> origin/master:src/board.c
 {
     for(int i=0; i<=7; i++)
     {
@@ -290,14 +149,15 @@ void reset_OK_moves(void)
 {
     for(int i=0;i<=7;i++)
     {
-        for(int j=0;i<=7;j++)
+        for(int j=0;j<=7;j++)
         {
             square[i][j].isMoveOk=0;
+            square[i][j].isSelected=0;
         }
     }
 }
 
-void get_authorized_moves(SDL_Rect square)
+void get_authorized_moves(SDL_Rect rect)
 {
     int max_move=1;
         for(int i=0; i<=7; i++)
@@ -309,8 +169,8 @@ void get_authorized_moves(SDL_Rect square)
                 {
                     max_move=2;
                 }
-                if((square.x==numcase_to_coord_x(i))
-                        &&(square.y==numcase_to_coord_y(j))
+                if((rect.x==numcase_to_coord_x(i))
+                        &&(rect.y==numcase_to_coord_y(j))
                         &&(square[i][j].pawn!=0))
                 {
                     for(int k = 1; k <= max_move; k++)
