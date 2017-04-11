@@ -139,6 +139,10 @@ void get_authorized_moves(SDL_Rect rect)
                     {
                         square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
                     }
+                    else if(square[i][j+(k*square[i][j].pawn)].pawn!=square[i][j].pawn)
+                    {
+                        k=max_move;
+                    }
                 }
                 square[i][j].isSelected=1;
             }
