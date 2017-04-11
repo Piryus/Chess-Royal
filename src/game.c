@@ -180,14 +180,18 @@ void wait_for_event(SDL_Renderer *renderer)
                     render_background(renderer);
                     render_base(renderer);
                     render_squares(renderer);
-                    if(move_ok=1)
+                    if(move_ok==1)
                     {
                         move_pawn_to(clickedSquare);
                         reset_OK_moves();
+                        move_ok=0;
                     }
-                    get_authorized_moves(clickedSquare);//->Select=1
+                    else
+                    {
+                    get_authorized_moves(clickedSquare);
                     move_ok=1;
-                    render_authorized_moves(clickedSquare,renderer);//Move=1
+                    render_authorized_moves(clickedSquare,renderer);
+                    }
                     render_pawns(renderer);
                 }
             }
