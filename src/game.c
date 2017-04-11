@@ -156,7 +156,7 @@ void wait_for_event(SDL_Renderer *renderer)
     SDL_Event event;
     SDL_Rect clickedSquare;
     int move_ok=0;
-    while(stop!=1)
+    while(!stop)
     {
         SDL_WaitEvent(&event);
         switch(event.type)
