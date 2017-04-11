@@ -4,7 +4,7 @@
 // Fonction permettant de renvoyer la case sur laquelle on a cliqué
 SDL_Rect get_clicked_square(int x, int y)
 {
-    SDL_Rect square = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
+    SDL_Rect clickedSquare = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
     for(int i=0; i<=7; i++)
     {
         for(int j=0; j<=7; j++)
@@ -14,65 +14,24 @@ SDL_Rect get_clicked_square(int x, int y)
                     && (y > (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING)*j)
                     && (y < (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING)*j + SQUARE_SIZE))
             {
-                square.x=(WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * i;
-                square.y=(WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * j;
-                printf("Position de la case cliquee acquise : x=%d y=%d !\n",square.x,square.y);
+                clickedSquare.x=(WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * i;
+                clickedSquare.y=(WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * j;
+                printf("Position de la case cliquee acquise : x=%d y=%d !\n",clickedSquare.x,clickedSquare.y);
             }
         }
     }
-    return square;
+    return clickedSquare;
 }
 //********************************************************************************************************************
 void game(SDL_Renderer *renderer)
 {
-    /*int isMovesShown;
-    pion pion[32];*/
-    int stop=0;
-    SDL_Event event;
-    SDL_Rect clickedSquare;
     SDL_RenderClear(renderer);
     render_background(renderer);
     render_base(renderer);
     render_squares(renderer);
     initialize_pawns_pos();
     render_pawns(renderer);
-    while(stop!=1)
-    {
-        SDL_WaitEvent(&event);
-        switch(event.type)
-        {
-        case SDL_QUIT:
-            stop=1;
-            break;
-        case SDL_KEYDOWN:
-            switch(event.key.keysym.sym)
-            {
-            case SDLK_ESCAPE:
-                stop=1;
-                break;
-            default:
-                break;
-            }
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            if(event.button.button == SDL_BUTTON_LEFT)   // Bouton souris gauche
-            {
-                clickedSquare=get_clicked_square(event.button.x,event.button.y);
-                SDL_RenderClear(renderer);
-                render_background(renderer);
-                render_base(renderer);
-                render_squares(renderer);
-                move_pawn_to(clickedSquare);
-                get_authorized_moves(clickedSquare);
-                render_authorized_moves(clickedSquare,renderer);
-                render_pawns(renderer);
-                reset_OK_moves();
-            }
-            break;
-        default:
-            break;
-        }
-    }
+    wait_for_event(renderer);
 }
 
 void initialize_pawns_pos(void)
@@ -134,8 +93,8 @@ void move_pawn_to(SDL_Rect clickedSquare)
                     {
                         if((square[k][l].isSelected==1))
                         {
-                        square[i][j].pawn=square[k][l].pawn;
-                        square[k][l].pawn=0;
+                            square[i][j].pawn=square[k][l].pawn;
+                            square[k][l].pawn=0;
                         }
 
                     }
@@ -147,9 +106,9 @@ void move_pawn_to(SDL_Rect clickedSquare)
 
 void reset_OK_moves(void)
 {
-    for(int i=0;i<=7;i++)
+    for(int i=0; i<=7; i++)
     {
-        for(int j=0;j<=7;j++)
+        for(int j=0; j<=7; j++)
         {
             square[i][j].isMoveOk=0;
             square[i][j].isSelected=0;
@@ -159,29 +118,82 @@ void reset_OK_moves(void)
 
 void get_authorized_moves(SDL_Rect rect)
 {
-    int max_move=1;
-        for(int i=0; i<=7; i++)
+    int max_move;
+    for(int i=0; i<=7; i++)
+    {
+        for(int j=0; j<=7; j++)
         {
-            for(int j=0; j<=7; j++)
+            max_move=1;
+            square[i][j].isSelected=0;
+            if((j<2)||(j>5))
             {
-                square[i][j].isSelected=0;
-                if((j<2)||(j>7))
+                max_move=2;
+            }
+            if((rect.x==numcase_to_coord_x(i))
+                    &&(rect.y==numcase_to_coord_y(j))
+                    &&(square[i][j].pawn!=0))
+            {
+                for(int k = 1; k <= max_move; k++)
                 {
-                    max_move=2;
-                }
-                if((rect.x==numcase_to_coord_x(i))
-                        &&(rect.y==numcase_to_coord_y(j))
-                        &&(square[i][j].pawn!=0))
-                {
-                    for(int k = 1; k <= max_move; k++)
+                    if(square[i][j+(k*square[i][j].pawn)].pawn==0)
                     {
-                        if(square[i][j+(k*square[i][j].pawn)].pawn==0)
-                        {
-                            square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
-                        }
+                        square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
                     }
-                    square[i][j].isSelected=1;
                 }
+                square[i][j].isSelected=1;
             }
         }
+    }
+}
+
+void wait_for_event(SDL_Renderer *renderer)
+{
+    int stop=0;
+    SDL_Event event;
+    SDL_Rect clickedSquare;
+    int move_ok=0;
+    while(stop!=1)
+    {
+        SDL_WaitEvent(&event);
+        switch(event.type)
+        {
+        case SDL_QUIT:
+            stop=1;
+            break;
+        case SDL_KEYDOWN:
+            switch(event.key.keysym.sym)
+            {
+            case SDLK_ESCAPE:
+                stop=1;
+                break;
+            default:
+                break;
+            }
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            if(event.button.button == SDL_BUTTON_LEFT)   // Bouton souris gauche
+            {
+                clickedSquare=get_clicked_square(event.button.x,event.button.y);
+                if((clickedSquare.x!=0)&&(clickedSquare.y!=0))
+                {
+                    SDL_RenderClear(renderer);
+                    render_background(renderer);
+                    render_base(renderer);
+                    render_squares(renderer);
+                    if(move_ok=1)
+                    {
+                        move_pawn_to(clickedSquare);
+                        reset_OK_moves();
+                    }
+                    get_authorized_moves(clickedSquare);//->Select=1
+                    move_ok=1;
+                    render_authorized_moves(clickedSquare,renderer);//Move=1
+                    render_pawns(renderer);
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
 }

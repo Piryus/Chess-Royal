@@ -77,6 +77,7 @@ extern int numcase_to_coord_x(int numcase);
 extern void reset_OK_moves(void);
 extern void move_pawn_to(SDL_Rect clickedSquare);
 extern void get_authorized_moves(SDL_Rect rect);
+extern void wait_for_event(SDL_Renderer *renderer);
 
 //Fonctions gérant l'affichage en jeu
 extern void render_background(SDL_Renderer *renderer);
