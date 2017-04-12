@@ -20,6 +20,7 @@
 #define _NOIR 1
 #define _VIDE 0
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>

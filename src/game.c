@@ -198,13 +198,13 @@ void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia)
                         if(ia == 1){
                             // INIT de l'IA
                             Joueur jN;
-                            jN.gamma[0] = 1000000 ;
-                            jN.gamma[1] = 660 ;
-                            jN.gamma[2] = -4.6 ;
-                            jN.gamma[3] = -108 ;
-                            jN.gamma[4] = 271.6 ;
-                            jN.gamma[5] = 70.4 ;
-                            jN.gamma[6] = 5000 ;
+                            jN.gamma[0] = 314 ;
+                            jN.gamma[1] = 40 ;
+                            jN.gamma[2] = 42.5 ;
+                            jN.gamma[3] = 47 ;
+                            jN.gamma[4] = -133.6 ;
+                            jN.gamma[5] = 121 ;
+                            jN.gamma[6] = 53 ;
                             //Fonctions d'action de l'ia
                             Possibillite bestAction;
                             findBestAction(&bestAction,_NOIR,square,&jN);
