@@ -23,7 +23,7 @@ SDL_Rect get_clicked_square(int x, int y)
     return clickedSquare;
 }
 //********************************************************************************************************************
-void game(SDL_Renderer *renderer,Square square[][8])
+void game(SDL_Renderer *renderer,Square square[][8], int ia)
 {
     SDL_RenderClear(renderer);
     render_background(renderer);
@@ -31,7 +31,7 @@ void game(SDL_Renderer *renderer,Square square[][8])
     render_squares(renderer);
     initialize_pawns_pos(square);
     render_pawns(renderer,square);
-    wait_for_event(renderer,square);
+    wait_for_event(renderer,square,ia);
 }
 
 void initialize_pawns_pos(Square square[][8])
@@ -153,23 +153,21 @@ void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour)
     }
 }
 
-void wait_for_event(SDL_Renderer *renderer,Square square[][8])
+void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia)
 {
     int stop=0;
-    int ia = 0;
     int tour = 1;
     SDL_Event event;
     SDL_Rect clickedSquare;
-    int move_ok=0;
     while(!stop)
     {
         SDL_WaitEvent(&event);
         switch(event.type)
         {
-        case SDL_QUIT:
+        case SDL_QUIT://###################################################################################################################################################################
             stop=1;
             break;
-        case SDL_KEYDOWN:
+        case SDL_KEYDOWN://###################################################################################################################################################################
             switch(event.key.keysym.sym)
             {
             case SDLK_ESCAPE:
@@ -179,7 +177,7 @@ void wait_for_event(SDL_Renderer *renderer,Square square[][8])
                 break;
             }
             break;
-        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONDOWN://###################################################################################################################################################################
             if(event.button.button == SDL_BUTTON_LEFT)   // Bouton souris gauche
             {
                 clickedSquare=get_clicked_square(event.button.x,event.button.y);
@@ -192,9 +190,32 @@ void wait_for_event(SDL_Renderer *renderer,Square square[][8])
                     if(move_pawn_to(clickedSquare,square) == 1-(tour%2)*2){
                         printf("tour : %d\n", tour);
                         tour ++;
+                        //Test de victoire
                         for(int i=0; i<=7; i++){
-                            if(square[i][7].pawn == 1){ printf("winner noir\n");}
-                            if(square[i][0].pawn == -1){ printf("winner blanc\n");}
+                            if(square[i][7].pawn == _NOIR){ printf("winner noir\n");}
+                            if(square[i][0].pawn == _BLANC){ printf("winner blanc\n");}
+                        }
+                        if(ia == 1){
+                            // INIT de l'IA
+                            Joueur jN;
+                            jN.gamma[0] = 1000000 ;
+                            jN.gamma[1] = 660 ;
+                            jN.gamma[2] = -4.6 ;
+                            jN.gamma[3] = -108 ;
+                            jN.gamma[4] = 271.6 ;
+                            jN.gamma[5] = 70.4 ;
+                            jN.gamma[6] = 5000 ;
+                            //Fonctions d'action de l'ia
+                            Possibillite bestAction;
+                            findBestAction(&bestAction,_NOIR,square,&jN);
+                            deplacement(bestAction,square,_NOIR);
+
+                            tour ++;
+                            //Test de victoire
+                            for(int i=0; i<=7; i++){
+                            if(square[i][7].pawn == _NOIR){ printf("winner noir\n");}
+                            if(square[i][0].pawn == _BLANC){ printf("winner blanc\n");}
+                            }
                         }
                     }
                     reset_OK_moves(square);
@@ -204,7 +225,7 @@ void wait_for_event(SDL_Renderer *renderer,Square square[][8])
                 }
             }
             break;
-        default:
+        default://###################################################################################################################################################################
             break;
         }
     }

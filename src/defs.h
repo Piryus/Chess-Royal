@@ -15,6 +15,11 @@
 #define MENU_SPACING 50
 #define NB_MENU_BUTTONS 4
 
+//Constantes
+#define _BLANC -1
+#define _NOIR 1
+#define _VIDE 0
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -40,6 +45,19 @@ We define our chess as below :
 
 Example : X = square[2][5]
 */
+
+
+typedef struct Joueur{
+    float gamma[7] ;
+} Joueur;
+
+typedef struct Possibillite{
+    int deX;
+    int deY;
+    int aX;
+    int aY;
+    float poids;
+} Possibillite;
 
 typedef struct Square
 {
@@ -68,7 +86,7 @@ typedef struct Game
 
 //Prototypes des fonctions gérant le jeu
 extern SDL_Rect get_clicked_square(int x, int y);
-extern void game(SDL_Renderer *renderer,Square square[][8]);
+extern void game(SDL_Renderer *renderer,Square square[][8], int ia);
 extern void initialize_pawns_pos(Square square[][8]);
 extern int posy(int numcase);
 extern int posx(int numcase);
@@ -77,7 +95,7 @@ extern int numcase_to_coord_x(int numcase);
 extern void reset_OK_moves(Square square[][8]);
 extern int move_pawn_to(SDL_Rect clickedSquare,Square square[][8]);
 extern void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour);
-extern void wait_for_event(SDL_Renderer *renderer,Square square[][8]);
+extern void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia);
 
 //Fonctions gérant l'affichage en jeu
 extern void render_background(SDL_Renderer *renderer);
@@ -99,4 +117,9 @@ extern void render_menu_background(SDL_Renderer *renderer,Square square[][8]);
 extern void render_game_title(SDL_Renderer *renderer);
 extern void init_random_pawns_pos(Square square[][8]);
 
-
+//Fonctions de l'IA
+extern int arrAcc(int plt[][8],int x, int y);
+extern float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,Joueur * jN);
+extern void listActions(Possibillite actionlist[] , Square plateau[][8], Joueur * jN);
+extern int findBestAction(Possibillite *bestAction ,int color , Square plateau[][8],Joueur * jN);
+extern void deplacement(Possibillite dpl, Square plat[][8],int color);

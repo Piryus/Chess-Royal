@@ -30,7 +30,7 @@ void menu(void)
                 //if(NULL!=menu)
                 //    SDL_DestroyTexture(menu);
                 SDL_RenderClear(renderer);
-                game(renderer,square);
+                game(renderer,square,1); // 0 = sans ia / 1 = avec <-------------#A modifier pour enlever ou mettre l'IA
                 continuer=0;
                 break;
             case SDLK_2:
