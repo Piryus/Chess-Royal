@@ -17,7 +17,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -41,12 +41,12 @@ We define our chess as below :
 Example : X = square[2][5]
 */
 
-struct square
+typedef struct chess_square
 {
     int pawn; //0=none 1=black -1=white
     int isSelected;
     int isMoveOk;
-};
+} Square;
 
 typedef struct date
 {
@@ -97,5 +97,6 @@ extern void menu(void);
 extern void render_menu_buttons(SDL_Renderer *renderer);
 extern void render_menu_background(SDL_Renderer *renderer);
 extern void render_game_title(SDL_Renderer *renderer);
+extern void init_random_pawns_pos(void);
 
-struct square square[8][8];
+Square square[8][8];

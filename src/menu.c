@@ -10,6 +10,7 @@ void menu(void)
     render_menu_background(renderer);
     render_game_title(renderer);
     render_menu_buttons(renderer);
+    render_menu_buttons_text(renderer);
     while(continuer)
     {
         SDL_WaitEvent(&event);
@@ -51,17 +52,35 @@ void render_menu_buttons(SDL_Renderer *renderer)
         menu_tile[i].w=WINDOW_WIDTH/2;
         menu_tile[i].x=(WINDOW_WIDTH-menu_tile[i].w)/2;
         menu_tile[i].y=WINDOW_HEIGHT/4+(menu_tile[i].h+MENU_SPACING)*i;
-        SDL_SetRenderDrawColor(renderer, 255, 174, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 43, 120, 255, 255);
         SDL_RenderDrawRect(renderer, &menu_tile[i]);
         SDL_RenderPresent(renderer);
     }
 }
 
+void render_menu_buttons_text(SDL_Renderer *renderer)
+{
+    SDL_Texture *button_text=NULL;
+    SDL_Rect font_rect;
+    TTF_Font *font_ConcertOne=NULL;
+    font_ConcertOne=TTF_OpenFont("ttf/ConcertOne-Regular.ttf",40);
+    button_text=loadFont_Blended(renderer, font_ConcertOne,"Jouer contre l'IA", 255, 255, 255);
+    SDL_QueryTexture(button_text,NULL,NULL,&font_rect.w,&font_rect.h);
+    RendTex(button_text,renderer,(WINDOW_WIDTH-font_rect.w)/2,WINDOW_HEIGHT/4+font_rect.h/2);
+    SDL_RenderPresent(renderer);
+}
+
 void render_menu_background(SDL_Renderer *renderer)
 {
-    SDL_Texture *menu=NULL;
-    menu=loadIMG("sprites/bg_menu.jpg",renderer);
-    RendTex(menu,renderer,0,0);
+    SDL_Rect background= {0,0,WINDOW_WIDTH,WINDOW_HEIGHT};
+    render_background(renderer);
+    render_base(renderer);
+    render_squares(renderer);
+    init_random_pawns_pos();
+    render_pawns(renderer);
+    SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+    SDL_RenderFillRect(renderer, &background);
     SDL_RenderPresent(renderer);
 }
 
@@ -71,10 +90,20 @@ void render_game_title(SDL_Renderer *renderer)
     SDL_Rect font_rect;
     TTF_Font *font_fipps=NULL;
     font_fipps=TTF_OpenFont("ttf/Fipps-Regular.ttf",40);
-    if(!font_fipps)
-        printf("Erreur TTF_OpenFont: %s\n", TTF_GetError());
     title=loadFont_Blended(renderer, font_fipps,"Chess Royal Alpha", 255, 144, 0);
     SDL_QueryTexture(title,NULL,NULL,&font_rect.w,&font_rect.h);
     RendTex(title,renderer,(WINDOW_WIDTH-font_rect.w)/2,(WINDOW_HEIGHT-font_rect.h)/50);
     SDL_RenderPresent(renderer);
+}
+
+void init_random_pawns_pos(void)
+{
+    srand(time(NULL));
+    for(int i=0; i<=7; i++)
+    {
+        for(int j=0; j<=7; j++)
+        {
+            square[i][j].pawn=rand()%3-1;
+        }
+    }
 }
