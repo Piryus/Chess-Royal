@@ -41,19 +41,19 @@ We define our chess as below :
 Example : X = square[2][5]
 */
 
-typedef struct chess_square
+typedef struct Square
 {
     int pawn; //0=none 1=black -1=white
     int isSelected;
     int isMoveOk;
 } Square;
 
-typedef struct date
+typedef struct Date
 {
     int j;
     int m;
     int a;
-} date;
+} Date;
 
 /*typedef struct game
 {
@@ -67,24 +67,24 @@ typedef struct date
 } game;*/
 
 //Prototypes des fonctions gérant le jeu
-extern void game(SDL_Renderer *renderer);
-extern void initialize_pawns_pos(void);
 extern SDL_Rect get_clicked_square(int x, int y);
+extern void game(SDL_Renderer *renderer,Square square[][8]);
+extern void initialize_pawns_pos(Square square[][8]);
 extern int posy(int numcase);
 extern int posx(int numcase);
 extern int numcase_to_coord_y(int numcase);
 extern int numcase_to_coord_x(int numcase);
-extern void reset_OK_moves(void);
-extern void move_pawn_to(SDL_Rect clickedSquare);
-extern void get_authorized_moves(SDL_Rect rect);
-extern void wait_for_event(SDL_Renderer *renderer);
+extern void reset_OK_moves(Square square[][8]);
+extern void move_pawn_to(SDL_Rect clickedSquare,Square square[][8]);
+extern void get_authorized_moves(SDL_Rect rect,Square square[][8]);
+extern void wait_for_event(SDL_Renderer *renderer,Square square[][8]);
 
 //Fonctions gérant l'affichage en jeu
 extern void render_background(SDL_Renderer *renderer);
 extern void render_base(SDL_Renderer *renderer);
 extern void render_squares(SDL_Renderer *renderer);
-extern void render_pawns(SDL_Renderer *renderer);
-extern void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer);
+extern void render_pawns(SDL_Renderer *renderer,Square square[][8]);
+extern void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8]);
 
 //Fonctions "raccourcis" SDL
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
@@ -95,8 +95,8 @@ extern int init(SDL_Window **window,SDL_Renderer **renderer);
 //Fonctions utilisées par le menu
 extern void menu(void);
 extern void render_menu_buttons(SDL_Renderer *renderer);
-extern void render_menu_background(SDL_Renderer *renderer);
+extern void render_menu_background(SDL_Renderer *renderer,Square square[][8]);
 extern void render_game_title(SDL_Renderer *renderer);
-extern void init_random_pawns_pos(void);
+extern void init_random_pawns_pos(Square square[][8]);
 
-Square square[8][8];
+

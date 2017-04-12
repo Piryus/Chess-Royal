@@ -2,12 +2,13 @@
 
 void menu(void)
 {
+    Square square[8][8];
     SDL_Window *window=NULL;
     SDL_Renderer *renderer=NULL;
     SDL_Event event;
     int continuer=1;
     init(&window,&renderer);
-    render_menu_background(renderer);
+    render_menu_background(renderer,square);
     render_game_title(renderer);
     render_menu_buttons(renderer);
     render_menu_buttons_text(renderer);
@@ -27,9 +28,9 @@ void menu(void)
                 break;
             case SDLK_1:
                 if(NULL!=menu)
-                    SDL_DestroyTexture(menu);
+                //    SDL_DestroyTexture(menu);
                 SDL_RenderClear(renderer);
-                game(renderer);
+                game(renderer,square);
                 continuer=0;
                 break;
             case SDLK_2:
@@ -70,14 +71,14 @@ void render_menu_buttons_text(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
-void render_menu_background(SDL_Renderer *renderer)
+void render_menu_background(SDL_Renderer *renderer,Square square[][8])
 {
     SDL_Rect background= {0,0,WINDOW_WIDTH,WINDOW_HEIGHT};
     render_background(renderer);
     render_base(renderer);
     render_squares(renderer);
-    init_random_pawns_pos();
-    render_pawns(renderer);
+    init_random_pawns_pos(square);
+    render_pawns(renderer,square);
     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
     SDL_RenderFillRect(renderer, &background);
@@ -96,7 +97,7 @@ void render_game_title(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
-void init_random_pawns_pos(void)
+void init_random_pawns_pos(Square square[][8])
 {
     srand(time(NULL));
     for(int i=0; i<=7; i++)

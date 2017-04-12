@@ -15,7 +15,7 @@ We define our chess as below :
 Example : X = square[2][5]
 */
 //********************************************************************************************************************
-void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
+void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8])
 {
     SDL_Texture *dot=NULL;
     for(int i=0; i<=7; i++)
@@ -37,7 +37,7 @@ void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
-void render_pawns(SDL_Renderer *renderer)
+void render_pawns(SDL_Renderer *renderer,Square square[][8])
 {
     SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
     pion_noir = loadIMG("sprites/blackpawn.png", renderer);
@@ -58,7 +58,6 @@ void render_pawns(SDL_Renderer *renderer)
     }
     SDL_RenderPresent(renderer);
 }
-
 
 void render_squares(SDL_Renderer *renderer)
 {
@@ -92,6 +91,7 @@ void render_base(SDL_Renderer *renderer)
     SDL_RenderFillRect(renderer, &bg_chess);
     SDL_RenderPresent(renderer);
 }
+
 void render_background(SDL_Renderer *renderer)
 {
     SDL_Texture *bg = NULL;

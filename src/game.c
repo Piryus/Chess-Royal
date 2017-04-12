@@ -23,18 +23,18 @@ SDL_Rect get_clicked_square(int x, int y)
     return clickedSquare;
 }
 //********************************************************************************************************************
-void game(SDL_Renderer *renderer)
+void game(SDL_Renderer *renderer,Square square[][8])
 {
     SDL_RenderClear(renderer);
     render_background(renderer);
     render_base(renderer);
     render_squares(renderer);
-    initialize_pawns_pos();
-    render_pawns(renderer);
-    wait_for_event(renderer);
+    initialize_pawns_pos(square);
+    render_pawns(renderer,square);
+    wait_for_event(renderer,square);
 }
 
-void initialize_pawns_pos(void)
+void initialize_pawns_pos(Square square[][8])
 {
     for(int i=0; i<=7; i++)
     {
@@ -79,7 +79,7 @@ int posy(int numcase)
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
 
-void move_pawn_to(SDL_Rect clickedSquare)
+void move_pawn_to(SDL_Rect clickedSquare,Square square[][8])
 {
     for(int i=0; i<=7; i++)
     {
@@ -104,7 +104,7 @@ void move_pawn_to(SDL_Rect clickedSquare)
     }
 }
 
-void reset_OK_moves(void)
+void reset_OK_moves(Square square[][8])
 {
     for(int i=0; i<=7; i++)
     {
@@ -116,7 +116,7 @@ void reset_OK_moves(void)
     }
 }
 
-void get_authorized_moves(SDL_Rect rect)
+void get_authorized_moves(SDL_Rect rect,Square square[][8])
 {
     int max_move;
     for(int i=0; i<=7; i++)
@@ -150,7 +150,7 @@ void get_authorized_moves(SDL_Rect rect)
     }
 }
 
-void wait_for_event(SDL_Renderer *renderer)
+void wait_for_event(SDL_Renderer *renderer,Square square[][8])
 {
     int stop=0;
     SDL_Event event;
@@ -186,17 +186,17 @@ void wait_for_event(SDL_Renderer *renderer)
                     render_squares(renderer);
                     if(move_ok==1)
                     {
-                        move_pawn_to(clickedSquare);
-                        reset_OK_moves();
+                        move_pawn_to(clickedSquare,square);
+                        reset_OK_moves(square);
                         move_ok=0;
                     }
                     else
                     {
-                    get_authorized_moves(clickedSquare);
+                    get_authorized_moves(clickedSquare,square);
                     move_ok=1;
-                    render_authorized_moves(clickedSquare,renderer);
+                    render_authorized_moves(clickedSquare,renderer,square);
                     }
-                    render_pawns(renderer);
+                    render_pawns(renderer,square);
                 }
             }
             break;
@@ -205,3 +205,4 @@ void wait_for_event(SDL_Renderer *renderer)
         }
     }
 }
+
