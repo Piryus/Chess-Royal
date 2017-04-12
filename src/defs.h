@@ -75,8 +75,8 @@ extern int posx(int numcase);
 extern int numcase_to_coord_y(int numcase);
 extern int numcase_to_coord_x(int numcase);
 extern void reset_OK_moves(Square square[][8]);
-extern void move_pawn_to(SDL_Rect clickedSquare,Square square[][8]);
-extern void get_authorized_moves(SDL_Rect rect,Square square[][8]);
+extern int move_pawn_to(SDL_Rect clickedSquare,Square square[][8]);
+extern void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour);
 extern void wait_for_event(SDL_Renderer *renderer,Square square[][8]);
 
 //Fonctions gérant l'affichage en jeu

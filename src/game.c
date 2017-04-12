@@ -79,7 +79,7 @@ int posy(int numcase)
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
 
-void move_pawn_to(SDL_Rect clickedSquare,Square square[][8])
+int move_pawn_to(SDL_Rect clickedSquare,Square square[][8])
 {
     for(int i=0; i<=7; i++)
     {
@@ -95,6 +95,7 @@ void move_pawn_to(SDL_Rect clickedSquare,Square square[][8])
                         {
                             square[i][j].pawn=square[k][l].pawn;
                             square[k][l].pawn=0;
+                            return square[i][j].pawn;
                         }
 
                     }
@@ -102,6 +103,7 @@ void move_pawn_to(SDL_Rect clickedSquare,Square square[][8])
             }
         }
     }
+    return 0;
 }
 
 void reset_OK_moves(Square square[][8])
@@ -116,7 +118,7 @@ void reset_OK_moves(Square square[][8])
     }
 }
 
-void get_authorized_moves(SDL_Rect rect,Square square[][8])
+void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour)
 {
     int max_move;
     for(int i=0; i<=7; i++)
@@ -129,7 +131,7 @@ void get_authorized_moves(SDL_Rect rect,Square square[][8])
             {
                 max_move=2;
             }
-            if((rect.x==numcase_to_coord_x(i))&&(rect.y==numcase_to_coord_y(j))&&(square[i][j].pawn!=0))
+            if((rect.x==numcase_to_coord_x(i))&&(rect.y==numcase_to_coord_y(j))&&(square[i][j].pawn!=0)&&(1-2*(tour%2) == square[i][j].pawn))
             {
                 if(square[i-1][j+(square[i][j].pawn)].pawn==square[i][j].pawn*(-1))
                     square[i-1][j+(square[i][j].pawn)].isMoveOk=1;
@@ -154,6 +156,8 @@ void get_authorized_moves(SDL_Rect rect,Square square[][8])
 void wait_for_event(SDL_Renderer *renderer,Square square[][8])
 {
     int stop=0;
+    int ia = 0;
+    int tour = 1;
     SDL_Event event;
     SDL_Rect clickedSquare;
     int move_ok=0;
@@ -185,18 +189,17 @@ void wait_for_event(SDL_Renderer *renderer,Square square[][8])
                     render_background(renderer);
                     render_base(renderer);
                     render_squares(renderer);
-                    if(move_ok==1)
-                    {
-                        move_pawn_to(clickedSquare,square);
-                        reset_OK_moves(square);
-                        move_ok=0;
+                    if(move_pawn_to(clickedSquare,square) == 1-(tour%2)*2){
+                        printf("tour : %d\n", tour);
+                        tour ++;
+                        for(int i=0; i<=7; i++){
+                            if(square[i][7].pawn == 1){ printf("winner noir\n");}
+                            if(square[i][0].pawn == -1){ printf("winner blanc\n");}
+                        }
                     }
-                    else
-                    {
-                    get_authorized_moves(clickedSquare,square);
-                    move_ok=1;
+                    reset_OK_moves(square);
+                    get_authorized_moves(clickedSquare,square,tour);
                     render_authorized_moves(clickedSquare,renderer,square);
-                    }
                     render_pawns(renderer,square);
                 }
             }

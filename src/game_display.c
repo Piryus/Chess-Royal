@@ -37,6 +37,7 @@ void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Squa
                 //dot = loadIMG("sprites/dot.png", renderer);
                 //RendTex(dot, renderer, posx(i), posy(j));
             }
+
         }
     }
     SDL_RenderPresent(renderer);
