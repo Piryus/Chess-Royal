@@ -55,16 +55,16 @@ typedef struct Date
     int a;
 } Date;
 
-/*typedef struct game
+typedef struct Game
 {
     int id;
     int ia;
     int scoreB;
     int scoreW;
     int turn;
-    date date;
-    pion pions[32];
-} game;*/
+    Date date;
+    int plateau[8][8];
+} Game;
 
 //Prototypes des fonctions gérant le jeu
 extern SDL_Rect get_clicked_square(int x, int y);

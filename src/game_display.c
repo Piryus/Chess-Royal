@@ -29,8 +29,13 @@ void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Squa
             }
             if(square[i][j].isMoveOk==1)
             {
-                dot = loadIMG("sprites/dot.png", renderer);
-                RendTex(dot, renderer, posx(i), posy(j));
+                SDL_Rect square_rect = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
+                square_rect.y = (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * j;
+                square_rect.x = (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * i;
+                SDL_SetRenderDrawColor(renderer, 80, 160, 80, 255);
+                SDL_RenderFillRect(renderer, &square_rect);
+                //dot = loadIMG("sprites/dot.png", renderer);
+                //RendTex(dot, renderer, posx(i), posy(j));
             }
         }
     }

@@ -129,20 +129,21 @@ void get_authorized_moves(SDL_Rect rect,Square square[][8])
             {
                 max_move=2;
             }
-            if((rect.x==numcase_to_coord_x(i))
-                    &&(rect.y==numcase_to_coord_y(j))
-                    &&(square[i][j].pawn!=0))
+            if((rect.x==numcase_to_coord_x(i))&&(rect.y==numcase_to_coord_y(j))&&(square[i][j].pawn!=0))
             {
+                if(square[i-1][j+(square[i][j].pawn)].pawn==square[i][j].pawn*(-1))
+                    square[i-1][j+(square[i][j].pawn)].isMoveOk=1;
+                if(square[i+1][j+(square[i][j].pawn)].pawn==square[i][j].pawn*(-1))
+                    square[i+1][j+(square[i][j].pawn)].isMoveOk=1;
+
                 for(int k = 1; k <= max_move; k++)
                 {
                     if(square[i][j+(k*square[i][j].pawn)].pawn==0)
-                    {
                         square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
-                    }
-                    else if(square[i][j+(k*square[i][j].pawn)].pawn!=square[i][j].pawn)
+                    /*else if(square[i][j+(k*square[i][j].pawn)].pawn!=square[i][j].pawn)
                     {
                         k=max_move;
-                    }
+                    }*/
                 }
                 square[i][j].isSelected=1;
             }

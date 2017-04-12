@@ -35,7 +35,7 @@ void deplacement(int id, int toX, int toY){
     fwrite(&lPart, sizeof(lPart), 1, fic);
 }
 //***************************************************************************************************************
-game nouvellePartie(){
+Game nouvellePartie(){
     FILE *fic;
     int pos = 0;
     fic = fopen("Sauvegardes/PartiesListe.dat","a");
@@ -54,7 +54,7 @@ game nouvellePartie(){
     fclose(fic);
 }
 //***************************************************************************************************************
-game chargerPartie(int id){
+Game chargerPartie(int id){
     FILE *fic;
     fic = fopen("Sauvegardes/PartiesListe.dat","r");
     game lPart;
@@ -108,50 +108,4 @@ void afficherScores(){
     }
 }
 //***************************************************************************************************************
-void menu_principal(){
-    int choix = 0;
-    int id = 0;
-    Partie partie;
-
-    /*
-        1:charger partie
-        2:nouvelle partie
-        3:liste des scores
-    */
-
-    while(choix!=4){
-        scanf("%d",&choix);
-        switch(choix){
-            case 1 :
-                if(listerParties() == 1){
-                    printf("\n id?");
-                    scanf("%d",&id);
-                    partie = chargerPartie(id);
-                }
-                //Ouvrir le plateau et afficher le tout
-            break;
-            case 2 : partie = nouvellePartie();
-                //Ouvrir le plateau et afficher le tout
-            break;
-            case 3 : afficherScores();
-            break;
-        }
-    }
-}
-//***************************************************************************************************************
-void inGame( Partie partieActuelle ){
-    int q = 1;
-    int tour = 1;
-    while(q!=1){
-       if(tour%2 == 1){  //Tour impair ( = blanc )
-
-       }else{          //tour pair ( = noir )
-            if(partieActuelle.ia){
-
-            }else{
-
-            }
-        }
-    }
-}
 
