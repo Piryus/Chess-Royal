@@ -126,7 +126,7 @@ void render_victory_screen(SDL_Renderer *renderer, int color)
     SDL_Rect background = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     SDL_Texture *victory_msg_1 = NULL, *victory_msg_2 = NULL;
     SDL_Rect font_rect;
-    TTF_Font *font_code_bold = NULL, *font_code_light=NULL;
+    TTF_Font *font_code_bold = NULL, *font_code_light = NULL;
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
     SDL_RenderFillRect(renderer, &background);
@@ -136,15 +136,38 @@ void render_victory_screen(SDL_Renderer *renderer, int color)
     /*victory_msg_1 = loadFont_Blended(renderer, font_code_bold, "Victoire !", 255,255,255);
     SDL_QueryTexture(victory_msg_1, NULL, NULL, &font_rect.w, &font_rect.h);
     RendTex(victory_msg_1, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 5);*/
-    if(color==_NOIR)
+    if(color == _NOIR)
     {
-      victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Noir remporte la partie !", 255,255,255);
+        victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Noir remporte la partie !", 255, 255, 255);
     }
-    else if(color==_BLANC)
+    else if(color == _BLANC)
     {
-        victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Blanc remporte la partie !", 255,255,255);
+        victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Blanc remporte la partie !", 255, 255, 255);
     }
     SDL_QueryTexture(victory_msg_2, NULL, NULL, &font_rect.w, &font_rect.h);
     RendTex(victory_msg_2, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
-    SDL_RenderPresent(renderer);
+    SDL_Texture *button_text = NULL;
+    TTF_Font *font_OpenSans = NULL;
+       SDL_Rect button = {0, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
+    SDL_Rect button_outline = {0, 0, 0, 0};
+    SDL_SetRenderDrawColor(renderer, 52, 152, 219, 255);//Couleur du bouton (intérieur)
+    int outline = 1;
+    button.x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2;
+    button.y = WINDOW_HEIGHT / 1.5;
+    SDL_RenderFillRect(renderer, &button);
+    SDL_SetRenderDrawColor(renderer, 41, 128, 185, 255);//Couleur du bouton (contour)
+    while(outline < BUTTON_OUTLINE)
+    {
+        button_outline.w = BUTTON_WIDTH + 2 * outline;
+        button_outline.h = BUTTON_HEIGHT + 2 * outline;
+        button_outline.x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2 - outline;
+        button_outline.y = WINDOW_HEIGHT / 1.5 - outline;
+        SDL_RenderDrawRect(renderer, &button_outline);
+        outline++;
+    }
+    font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 30);
+    button_text = loadFont_Blended(renderer, font_OpenSans, "Retour au menu principal", 236, 240, 241);
+    SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 1.5 + (BUTTON_HEIGHT - font_rect.h) / 2);
+        SDL_RenderPresent(renderer);
 }

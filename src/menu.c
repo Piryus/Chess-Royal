@@ -91,9 +91,9 @@ void render_menu_button_text(SDL_Renderer *renderer, int menu_button_id, char te
     SDL_Rect font_rect;
     TTF_Font *font_OpenSans = NULL;
     font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
-    button_text = loadFont_Blended(renderer, font_OpenSans, texte, 255, 255, 255);
+    button_text = loadFont_Blended(renderer, font_OpenSans, texte, 236, 240, 241);
     SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT - font_rect.h) / 2 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * menu_button_id); //5px de correction
+    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT - font_rect.h) / 2 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * menu_button_id);
     SDL_RenderPresent(renderer);
 }
 
