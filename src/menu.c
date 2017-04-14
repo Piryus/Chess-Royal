@@ -157,6 +157,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
     int cursor_x, cursor_y;
     SDL_GetMouseState(&cursor_x, &cursor_y);
     int isInside = 0;
+    Game partiesList[saveSize()];
     for(int i = 0; i < (NB_MENU_BUTTONS); i++)
     {
         if((cursor_x > (WINDOW_WIDTH - BUTTON_WIDTH) / 2)
@@ -182,7 +183,6 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                 break;
             case 2://==================================    Charger partie
                 SDL_RenderClear(renderer);
-                Game partiesList[saveSize()];
                 listerParties(partiesList);
                 // Afficher le tableau partieList
                 /* pour rappel :
@@ -212,7 +212,6 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                 break;
             case 3://==================================    Scores
                 SDL_RenderClear(renderer);
-                Game partiesList[saveSize()];
                 listerParties(partiesList);
                 // Afficher le tableau partieList
                 break;
