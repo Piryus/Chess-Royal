@@ -12,8 +12,13 @@
 #define SQUARE_SIZE 85
 
 //Menu
-#define MENU_SPACING 50
-#define NB_MENU_BUTTONS 4
+#define MENU_BUTTON_SPACING 50
+#define NB_MENU_BUTTONS 5
+#define BUTTON_WIDTH WINDOW_WIDTH/4
+#define BUTTON_HEIGHT WINDOW_HEIGHT/15
+#define BUTTON_OUTLINE 5
+#define IA 1
+#define NO_IA 0
 
 //Constantes
 #define _BLANC -1
@@ -97,6 +102,7 @@ extern void reset_OK_moves(Square square[][8]);
 extern int move_pawn_to(SDL_Rect clickedSquare,Square square[][8]);
 extern void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour);
 extern void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia);
+extern void getWinner(SDL_Renderer *renderer, Square square[][8], int tour);
 
 //Fonctions gérant l'affichage en jeu
 extern void render_background(SDL_Renderer *renderer);
@@ -104,6 +110,7 @@ extern void render_base(SDL_Renderer *renderer);
 extern void render_squares(SDL_Renderer *renderer);
 extern void render_pawns(SDL_Renderer *renderer,Square square[][8]);
 extern void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8]);
+extern void render_victory_screen(SDL_Renderer *renderer, int color);
 
 //Fonctions "raccourcis" SDL
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
@@ -117,6 +124,8 @@ extern void render_menu_buttons(SDL_Renderer *renderer);
 extern void render_menu_background(SDL_Renderer *renderer,Square square[][8]);
 extern void render_game_title(SDL_Renderer *renderer);
 extern void init_random_pawns_pos(Square square[][8]);
+extern void render_menu_button_text(SDL_Renderer *renderer, int menu_button_id, char texte[]);
+extern int event_click(SDL_Renderer *renderer, Square square[][8]);
 
 //Fonctions de l'IA
 extern int arrAcc(int plt[][8],int x, int y);

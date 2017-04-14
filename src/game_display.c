@@ -15,48 +15,52 @@ We define our chess as below :
 Example : X = square[2][5]
 */
 //********************************************************************************************************************
-void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer,Square square[][8])
+void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *renderer, Square square[][8])
 {
-    SDL_Texture *dot=NULL;
-    for(int i=0; i<=7; i++)
+    SDL_Rect square_rect = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
+    for(int i = 0; i <= 7; i++)
     {
-        for(int j=0; j<=7; j++)
+        for(int j = 0; j <= 7; j++)
         {
-            if(square[i][j].isSelected==1)
+            if(square[i][j].isSelected == 1) //Si une case est sélectionnée
             {
                 SDL_SetRenderDrawColor(renderer, 231, 252, 212, 255);
                 SDL_RenderFillRect(renderer, &clickedSquare);
             }
-            if(square[i][j].isMoveOk==1)
+            if(square[i][j].isMoveOk == 1) //Si le déplacement est autorisé sur une case
             {
-                SDL_Rect square_rect = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
-                square_rect.y = (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * j;
-                square_rect.x = (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * i;
-                SDL_SetRenderDrawColor(renderer, 80, 160, 80, 255);
-                SDL_RenderFillRect(renderer, &square_rect);
-                //dot = loadIMG("sprites/dot.png", renderer);
-                //RendTex(dot, renderer, posx(i), posy(j));
+                square_rect.x = numcase_to_coord_x(i);
+                square_rect.y = numcase_to_coord_y(j);
+                if(square[i][j].pawn != 0) //Si la case comporte un pion, couleur : rouge
+                {
+                    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                    SDL_RenderFillRect(renderer, &square_rect);
+                }
+                else //Si la case ne comporte pas de pion, couleur : verte
+                {
+                    SDL_SetRenderDrawColor(renderer, 80, 160, 80, 255);
+                    SDL_RenderFillRect(renderer, &square_rect);
+                }
             }
-
         }
     }
     SDL_RenderPresent(renderer);
 }
 
-void render_pawns(SDL_Renderer *renderer,Square square[][8])
+void render_pawns(SDL_Renderer *renderer, Square square[][8])
 {
     SDL_Texture *pion_noir = NULL, *pion_blanc = NULL;
     pion_noir = loadIMG("sprites/blackpawn.png", renderer);
     pion_blanc = loadIMG("sprites/whitepawn.png", renderer);
-    for(int i = 0; i<=7; i++)
+    for(int i = 0; i <= 7; i++)
     {
-        for(int j=0; j<=7; j++)
+        for(int j = 0; j <= 7; j++)
         {
-            if(square[i][j].pawn==-1)
+            if(square[i][j].pawn == -1)
             {
                 RendTex(pion_blanc, renderer, posx(i), posy(j));
             }
-            else if(square[i][j].pawn==1)
+            else if(square[i][j].pawn == 1)
             {
                 RendTex(pion_noir, renderer, posx(i), posy(j));
             }
@@ -92,7 +96,11 @@ void render_squares(SDL_Renderer *renderer)
 /* Fonction permettant d'afficher la base se trouvant sous l'échiquier*/
 void render_base(SDL_Renderer *renderer)
 {
-    SDL_Rect bg_chess = {((WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, ((WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE, SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE};
+    SDL_Rect bg_chess = {((WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING,
+                         ((WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2) - SPACING,
+                         SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE,
+                         SPACING + (SQUARE_SIZE + SPACING) * CHESS_NB_SQUARE
+                        };
     SDL_SetRenderDrawColor(renderer, 133, 44, 16, 255);
     SDL_RenderFillRect(renderer, &bg_chess);
     SDL_RenderPresent(renderer);
@@ -110,5 +118,33 @@ void render_background(SDL_Renderer *renderer)
         }
     }
     SDL_RenderPresent(renderer);
+}
 
+
+void render_victory_screen(SDL_Renderer *renderer, int color)
+{
+    SDL_Rect background = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+    SDL_Texture *victory_msg_1 = NULL, *victory_msg_2 = NULL;
+    SDL_Rect font_rect;
+    TTF_Font *font_code_bold = NULL, *font_code_light=NULL;
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+    SDL_RenderFillRect(renderer, &background);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    font_code_bold = TTF_OpenFont("ttf/CODE_Bold.ttf", 150);
+    font_code_light = TTF_OpenFont("ttf/CODE_Bold.ttf", 100);
+    /*victory_msg_1 = loadFont_Blended(renderer, font_code_bold, "Victoire !", 255,255,255);
+    SDL_QueryTexture(victory_msg_1, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(victory_msg_1, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 5);*/
+    if(color==_NOIR)
+    {
+      victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Noir remporte la partie !", 255,255,255);
+    }
+    else if(color==_BLANC)
+    {
+        victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Blanc remporte la partie !", 255,255,255);
+    }
+    SDL_QueryTexture(victory_msg_2, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(victory_msg_2, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
+    SDL_RenderPresent(renderer);
 }

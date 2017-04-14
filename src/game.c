@@ -5,55 +5,55 @@
 SDL_Rect get_clicked_square(int x, int y)
 {
     SDL_Rect clickedSquare = {0, 0, SQUARE_SIZE, SQUARE_SIZE};
-    for(int i=0; i<=7; i++)
+    for(int i = 0; i <= 7; i++)
     {
-        for(int j=0; j<=7; j++)
+        for(int j = 0; j <= 7; j++)
         {
-            if((x > (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING)*i)
-                    && (x < (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING)*i + SQUARE_SIZE)
-                    && (y > (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING)*j)
-                    && (y < (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING)*j + SQUARE_SIZE))
+            if((x > numcase_to_coord_x(i))
+                    && (x < numcase_to_coord_x(i) + SQUARE_SIZE)
+                    && (y > numcase_to_coord_y(j))
+                    && (y < numcase_to_coord_y(j) + SQUARE_SIZE))
             {
-                clickedSquare.x=(WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * i;
-                clickedSquare.y=(WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * j;
-                printf("Position de la case cliquee acquise : x=%d y=%d !\n",clickedSquare.x,clickedSquare.y);
+                clickedSquare.x = numcase_to_coord_x(i);
+                clickedSquare.y = numcase_to_coord_y(j);
+                printf("Position de la case cliquee acquise : x=%d y=%d !\n", clickedSquare.x, clickedSquare.y);
             }
         }
     }
     return clickedSquare;
 }
-//********************************************************************************************************************
-void game(SDL_Renderer *renderer,Square square[][8], int ia)
+//Fonction principal gérant le jeu
+void game(SDL_Renderer *renderer, Square square[][8], int ia)
 {
     SDL_RenderClear(renderer);
     render_background(renderer);
     render_base(renderer);
     render_squares(renderer);
     initialize_pawns_pos(square);
-    render_pawns(renderer,square);
-    wait_for_event(renderer,square,ia);
+    render_pawns(renderer, square);
+    wait_for_event(renderer, square, ia);
 }
 
 void initialize_pawns_pos(Square square[][8])
 {
-    for(int i=0; i<=7; i++)
+    for(int i = 0; i <= 7; i++)
     {
-        for(int j=0; j<=7; j++)
+        for(int j = 0; j <= 7; j++)
         {
-            if(j<2)
+            if(j < 2)
             {
-                square[i][j].pawn=1;
+                square[i][j].pawn = 1;
             }
-            else if(j>5)
+            else if(j > 5)
             {
-                square[i][j].pawn=-1;
+                square[i][j].pawn = -1;
             }
             else
             {
-                square[i][j].pawn=0;
+                square[i][j].pawn = 0;
             }
-            square[i][j].isSelected=0;
-            square[i][j].isMoveOk=0;
+            square[i][j].isSelected = 0;
+            square[i][j].isMoveOk = 0;
         }
     }
 }
@@ -73,31 +73,30 @@ int posx(int numcase)
 {
     return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
-//********************************************************************************************************************
+//Fonction transposant le numéro d'une case en coordonées pour le pion (y)
 int posy(int numcase)
 {
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
 
-int move_pawn_to(SDL_Rect clickedSquare,Square square[][8])
+int move_pawn_to(SDL_Rect clickedSquare, Square square[][8])
 {
-    for(int i=0; i<=7; i++)
+    for(int i = 0; i <= 7; i++)
     {
-        for(int j=0; j<=7; j++)
+        for(int j = 0; j <= 7; j++)
         {
-            if((square[i][j].isMoveOk==1)&&(clickedSquare.x==numcase_to_coord_x(i))&&(clickedSquare.y==numcase_to_coord_y(j)))
+            if((square[i][j].isMoveOk == 1) && (clickedSquare.x == numcase_to_coord_x(i)) && (clickedSquare.y == numcase_to_coord_y(j)))
             {
-                for(int k=0; k<=7; k++)
+                for(int k = 0; k <= 7; k++)
                 {
-                    for(int l=0; l<=7; l++)
+                    for(int l = 0; l <= 7; l++)
                     {
-                        if((square[k][l].isSelected==1))
+                        if((square[k][l].isSelected == 1))
                         {
-                            square[i][j].pawn=square[k][l].pawn;
-                            square[k][l].pawn=0;
-                            return square[i][j].pawn;
+                            square[i][j].pawn = square[k][l].pawn;
+                            square[k][l].pawn = 0;
+                            return 1;
                         }
-
                     }
                 }
             }
@@ -108,54 +107,62 @@ int move_pawn_to(SDL_Rect clickedSquare,Square square[][8])
 
 void reset_OK_moves(Square square[][8])
 {
-    for(int i=0; i<=7; i++)
+    for(int i = 0; i <= 7; i++)
     {
-        for(int j=0; j<=7; j++)
+        for(int j = 0; j <= 7; j++)
         {
-            square[i][j].isMoveOk=0;
-            square[i][j].isSelected=0;
+            square[i][j].isMoveOk = 0;
+            square[i][j].isSelected = 0;
         }
     }
 }
 
-void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour)
+void get_authorized_moves(SDL_Rect rect, Square square[][8], int tour)
 {
     int max_move;
-    for(int i=0; i<=7; i++)
+    for(int i = 0; i <= 7; i++)
     {
-        for(int j=0; j<=7; j++)
+        for(int j = 0; j <= 7; j++)
         {
-            max_move=1;
-            square[i][j].isSelected=0;
-            if((j<2)||(j>5))
+            max_move = 1;
+            square[i][j].isSelected = 0;
+            if((j < 2) || (j > 5))
             {
-                max_move=2;
+                max_move = 2;
             }
-            if((rect.x==numcase_to_coord_x(i))&&(rect.y==numcase_to_coord_y(j))&&(square[i][j].pawn!=0)&&(1-2*(tour%2) == square[i][j].pawn))
+            if((rect.x == numcase_to_coord_x(i)) //On vérifie qu'on est sur la case ciblée (en x)
+                    && (rect.y == numcase_to_coord_y(j)) //On vérifie qu'on est sur la case ciblée (en y)
+                    && (square[i][j].pawn != 0) //On vérifie qu'il y a un pion sur cette case
+                    && (1 - 2 * (tour % 2) == square[i][j].pawn)) //On vérifie que le tour correspond à la couleur du pion
             {
-                if(square[i-1][j+(square[i][j].pawn)].pawn==square[i][j].pawn*(-1))
-                    square[i-1][j+(square[i][j].pawn)].isMoveOk=1;
-                if(square[i+1][j+(square[i][j].pawn)].pawn==square[i][j].pawn*(-1))
-                    square[i+1][j+(square[i][j].pawn)].isMoveOk=1;
-
+                if(square[i - 1][j + (square[i][j].pawn)].pawn == square[i][j].pawn * (-1)) //Si il y a un pion sur la diagonale gauche
+                {
+                    square[i - 1][j + (square[i][j].pawn)].isMoveOk = 1;
+                }
+                if(square[i + 1][j + (square[i][j].pawn)].pawn == square[i][j].pawn * (-1)) //Si il y a un pion sur la diagonale droite
+                {
+                    square[i + 1][j + (square[i][j].pawn)].isMoveOk = 1;
+                }
                 for(int k = 1; k <= max_move; k++)
                 {
-                    if(square[i][j+(k*square[i][j].pawn)].pawn==0)
-                        square[i][j+(k*square[i][j].pawn)].isMoveOk=1;
+                    if(square[i][j + (k * square[i][j].pawn)].pawn == 0)
+                    {
+                        square[i][j + (k * square[i][j].pawn)].isMoveOk = 1;
+                    }
                     /*else if(square[i][j+(k*square[i][j].pawn)].pawn!=square[i][j].pawn)
                     {
                         k=max_move;
                     }*/
                 }
-                square[i][j].isSelected=1;
+                square[i][j].isSelected = 1;
             }
         }
     }
 }
 
-void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia)
+void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia)
 {
-    int stop=0;
+    int stop = 0;
     int tour = 1;
     SDL_Event event;
     SDL_Rect clickedSquare;
@@ -165,37 +172,35 @@ void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia)
         switch(event.type)
         {
         case SDL_QUIT://###################################################################################################################################################################
-            stop=1;
+            stop = 1;
             break;
         case SDL_KEYDOWN://###################################################################################################################################################################
             switch(event.key.keysym.sym)
             {
             case SDLK_ESCAPE:
-                stop=1;
+                //menu_ingame(renderer);
+                stop = 1;
                 break;
             default:
                 break;
             }
             break;
-        case SDL_MOUSEBUTTONDOWN://###################################################################################################################################################################
-            if(event.button.button == SDL_BUTTON_LEFT)   // Bouton souris gauche
+        case SDL_MOUSEBUTTONDOWN:// Bouton souris
+            if(event.button.button == SDL_BUTTON_LEFT)// Bouton souris gauche
             {
-                clickedSquare=get_clicked_square(event.button.x,event.button.y);
-                if((clickedSquare.x!=0)&&(clickedSquare.y!=0))
+                clickedSquare = get_clicked_square(event.button.x, event.button.y);
+                if((clickedSquare.x != 0) && (clickedSquare.y != 0))
                 {
                     SDL_RenderClear(renderer);
                     render_background(renderer);
                     render_base(renderer);
                     render_squares(renderer);
-                    if(move_pawn_to(clickedSquare,square) == 1-(tour%2)*2){
-                        printf("tour : %d\n", tour);
-                        tour ++;
-                        //Test de victoire
-                        for(int i=0; i<=7; i++){
-                            if(square[i][7].pawn == _NOIR){ printf("winner noir\n");}
-                            if(square[i][0].pawn == _BLANC){ printf("winner blanc\n");}
-                        }
-                        if(ia == 1){
+                    if(move_pawn_to(clickedSquare, square)==1)
+                    {
+                        printf("Tour : %d\n", tour);
+                        tour ++; //Tour suivant
+                        if(ia == 1)
+                        {
                             // INIT de l'IA
                             Joueur jN;
                             jN.gamma[0] = 314 ;
@@ -207,27 +212,60 @@ void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia)
                             jN.gamma[6] = 53 ;
                             //Fonctions d'action de l'ia
                             Possibillite bestAction;
-                            findBestAction(&bestAction,_NOIR,square,&jN);
-                            deplacement(bestAction,square,_NOIR);
-
+                            findBestAction(&bestAction, _NOIR, square, &jN);
+                            deplacement(bestAction, square, _NOIR);
                             tour ++;
-                            //Test de victoire
-                            for(int i=0; i<=7; i++){
-                            if(square[i][7].pawn == _NOIR){ printf("winner noir\n");}
-                            if(square[i][0].pawn == _BLANC){ printf("winner blanc\n");}
-                            }
                         }
                     }
                     reset_OK_moves(square);
-                    get_authorized_moves(clickedSquare,square,tour);
-                    render_authorized_moves(clickedSquare,renderer,square);
-                    render_pawns(renderer,square);
+                    get_authorized_moves(clickedSquare, square, tour);
+                    render_authorized_moves(clickedSquare, renderer, square);
+                    render_pawns(renderer, square);
+                    getWinner(renderer, square, tour);
                 }
             }
             break;
-        default://###################################################################################################################################################################
+        default://Cas par défaut
             break;
         }
     }
+}
+
+void getWinner(SDL_Renderer *renderer, Square square[][8], int tour)
+{
+    int move_counter=0;
+    for(int i = 0; i <= 7; i++)
+    {
+        if(square[i][7].pawn == _NOIR)
+        {
+            render_victory_screen(renderer, _NOIR);
+        }
+        if(square[i][0].pawn == _BLANC)
+        {
+            render_victory_screen(renderer, _BLANC);
+        }
+    }
+//On vérifie qu'un jouer n'est pas bloqué, si c'est le cas, l'autre joueur l'emporte.
+/*    for(int i = 0; i <= 7; i++)
+    {
+        for(int j = 0; j <= 7; j++)
+        {
+          if(square[i][j].isMoveOk==1)
+          {
+            move_counter++;
+          }
+        }
+    }
+    if(move_counter==0)
+    {
+        if(tour%2==1)
+        {
+          render_victory_screen(renderer, _BLANC);
+        }
+        else if(tour%2==0)
+        {
+            render_victory_screen(renderer, _NOIR);
+        }
+    }*/
 }
 
