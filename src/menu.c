@@ -56,7 +56,7 @@ void render_menu_buttons(SDL_Renderer *renderer)
 {
     SDL_Rect menu_tile = {0, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
     SDL_Rect menu_tile_outline = {0, 0, 0, 0};
-    SDL_SetRenderDrawColor(renderer, 0, 100, 188, 255);//Couleur des boutons (intérieur)
+    SDL_SetRenderDrawColor(renderer, 52, 152, 219, 255);//Couleur des boutons (intérieur)
     int outline = 1;
     for(int i = 0; i < (NB_MENU_BUTTONS); i++)
     {
@@ -64,7 +64,7 @@ void render_menu_buttons(SDL_Renderer *renderer)
         menu_tile.y = WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * i;
         SDL_RenderFillRect(renderer, &menu_tile);
     }
-    SDL_SetRenderDrawColor(renderer, 0, 11, 95, 255);//Couleur des boutons (contour)
+    SDL_SetRenderDrawColor(renderer, 41, 128, 185, 255);//Couleur des boutons (contour)
     while(outline < BUTTON_OUTLINE)
     {
         for(int i = 0; i < (NB_MENU_BUTTONS); i++)
@@ -89,11 +89,11 @@ void render_menu_button_text(SDL_Renderer *renderer, int menu_button_id, char te
 {
     SDL_Texture *button_text = NULL;
     SDL_Rect font_rect;
-    TTF_Font *font_ConcertOne = NULL;
-    font_ConcertOne = TTF_OpenFont("ttf/ConcertOne-Regular.ttf", 40);
-    button_text = loadFont_Blended(renderer, font_ConcertOne, texte, 255, 255, 255);
+    TTF_Font *font_OpenSans = NULL;
+    font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
+    button_text = loadFont_Blended(renderer, font_OpenSans, texte, 255, 255, 255);
     SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT - font_rect.h) / 2 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * menu_button_id - 5); //5px de correction
+    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT - font_rect.h) / 2 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * menu_button_id); //5px de correction
     SDL_RenderPresent(renderer);
 }
 
