@@ -124,28 +124,24 @@ void render_background(SDL_Renderer *renderer)
 void render_victory_screen(SDL_Renderer *renderer, int color)
 {
     SDL_Rect background = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    SDL_Texture *victory_msg_1 = NULL, *victory_msg_2 = NULL;
+    SDL_Texture *victory_msg = NULL;
     SDL_Rect font_rect;
-    TTF_Font *font_code_bold = NULL, *font_code_light = NULL;
+    TTF_Font *font_code_light = NULL;
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
     SDL_RenderFillRect(renderer, &background);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-    font_code_bold = TTF_OpenFont("ttf/CODE_Bold.ttf", 150);
-    font_code_light = TTF_OpenFont("ttf/CODE_Bold.ttf", 100);
-    /*victory_msg_1 = loadFont_Blended(renderer, font_code_bold, "Victoire !", 255,255,255);
-    SDL_QueryTexture(victory_msg_1, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(victory_msg_1, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 5);*/
+    font_code_light = TTF_OpenFont("ttf/CODE_Light.ttf", 100);
     if(color == _NOIR)
     {
-        victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Noir remporte la partie !", 255, 255, 255);
+        victory_msg = loadFont_Blended(renderer, font_code_light, "Le joueur Noir remporte la partie !", 255, 255, 255);
     }
     else if(color == _BLANC)
     {
-        victory_msg_2 = loadFont_Blended(renderer, font_code_light, "Le joueur Blanc remporte la partie !", 255, 255, 255);
+        victory_msg = loadFont_Blended(renderer, font_code_light, "Le joueur Blanc remporte la partie !", 255, 255, 255);
     }
-    SDL_QueryTexture(victory_msg_2, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(victory_msg_2, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
+    SDL_QueryTexture(victory_msg, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(victory_msg, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
     SDL_Texture *button_text = NULL;
     TTF_Font *font_OpenSans = NULL;
     SDL_Rect button = {0, 0, BUTTON_WIDTH, BUTTON_HEIGHT};

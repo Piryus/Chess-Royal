@@ -214,7 +214,7 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                             jN.gamma[6] = 53 ;
                             //Fonctions d'action de l'ia
                             Possibillite bestAction;
-                            findBestAction(&bestAction, _NOIR, square, &jN);
+                            findBestAction(&bestAction, square, &jN);
                             deplacement(bestAction, square, _NOIR);
                             partie->tour = partie->tour + 1;
                         }
@@ -241,7 +241,7 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
 
 void getWinner(SDL_Renderer *renderer, Square square[][8], Game * game)
 {
-    int move_counter=0;
+//    int move_counter=0;
     for(int i = 0; i <= 7; i++)
     {
         if(square[i][7].pawn == _NOIR)

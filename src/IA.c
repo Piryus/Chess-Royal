@@ -170,7 +170,7 @@ void listActions(Possibillite actionlist[] , Square plateau[][8], Joueur *jN){
     }
 }
 
-int findBestAction(Possibillite *bestAction ,int color , Square plateau[][8],Joueur *jN){
+int findBestAction(Possibillite *bestAction , Square plateau[][8],Joueur *jN){
     Possibillite actionlist[50];
 
     listActions( actionlist , plateau ,jN);

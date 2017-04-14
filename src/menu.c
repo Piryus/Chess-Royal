@@ -39,6 +39,8 @@ void menu(void)
         case SDL_MOUSEMOTION:
             //select_button(renderer);
             break;
+        default:
+            break;
         }
     }
 }
@@ -156,7 +158,6 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
     int quit = 0;
     int cursor_x, cursor_y;
     SDL_GetMouseState(&cursor_x, &cursor_y);
-    int isInside = 0;
     Game partiesList[saveSize()];
     for(int i = 0; i < (NB_MENU_BUTTONS); i++)
     {

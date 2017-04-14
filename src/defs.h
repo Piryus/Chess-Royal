@@ -138,5 +138,6 @@ extern int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie
 extern int arrAcc(int plt[][8],int x, int y);
 extern float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,Joueur * jN);
 extern void listActions(Possibillite actionlist[] , Square plateau[][8], Joueur * jN);
-extern int findBestAction(Possibillite *bestAction ,int color , Square plateau[][8],Joueur * jN);
+extern int findBestAction(Possibillite *bestAction , Square plateau[][8],Joueur * jN);
 extern void deplacement(Possibillite dpl, Square plat[][8],int color);
+extern void affPlt(int plt[][8]);
