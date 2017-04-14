@@ -11,6 +11,7 @@ void menu(void)
     render_menu_background(renderer, square);
     render_game_title(renderer);
     render_menu_buttons(renderer);
+    Game partie;
     while(continuer)
     {
         SDL_WaitEvent(&event);
@@ -25,22 +26,12 @@ void menu(void)
             case SDLK_ESCAPE:
                 continuer = 0;
                 break;
-            case SDLK_1:
-                //if(NULL!=menu)
-                //    SDL_DestroyTexture(menu);
-                SDL_RenderClear(renderer);
-                game(renderer, square, 1); // 0 = sans ia / 1 = avec <-------------#A modifier pour enlever ou mettre l'IA
-                continuer = 0;
-                break;
-            case SDLK_2:
-                continuer = 0;
-                break;
             default:
                 break;
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if(event_click(renderer, square))
+            if(event_click(renderer, square, &partie))
             {
               continuer=0;
             }
@@ -56,7 +47,7 @@ void render_menu_buttons(SDL_Renderer *renderer)
 {
     SDL_Rect menu_tile = {0, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
     SDL_Rect menu_tile_outline = {0, 0, 0, 0};
-    SDL_SetRenderDrawColor(renderer, 52, 152, 219, 255);//Couleur des boutons (intérieur)
+    SDL_SetRenderDrawColor(renderer, 0, 100, 188, 255);//Couleur des boutons (intérieur)
     int outline = 1;
     for(int i = 0; i < (NB_MENU_BUTTONS); i++)
     {
@@ -64,7 +55,7 @@ void render_menu_buttons(SDL_Renderer *renderer)
         menu_tile.y = WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * i;
         SDL_RenderFillRect(renderer, &menu_tile);
     }
-    SDL_SetRenderDrawColor(renderer, 41, 128, 185, 255);//Couleur des boutons (contour)
+    SDL_SetRenderDrawColor(renderer, 0, 11, 95, 255);//Couleur des boutons (contour)
     while(outline < BUTTON_OUTLINE)
     {
         for(int i = 0; i < (NB_MENU_BUTTONS); i++)
@@ -89,11 +80,11 @@ void render_menu_button_text(SDL_Renderer *renderer, int menu_button_id, char te
 {
     SDL_Texture *button_text = NULL;
     SDL_Rect font_rect;
-    TTF_Font *font_OpenSans = NULL;
-    font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
-    button_text = loadFont_Blended(renderer, font_OpenSans, texte, 236, 240, 241);
+    TTF_Font *font_ConcertOne = NULL;
+    font_ConcertOne = TTF_OpenFont("ttf/ConcertOne-Regular.ttf", 40);
+    button_text = loadFont_Blended(renderer, font_ConcertOne, texte, 255, 255, 255);
     SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT - font_rect.h) / 2 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * menu_button_id);
+    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT - font_rect.h) / 2 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * menu_button_id - 5); //5px de correction
     SDL_RenderPresent(renderer);
 }
 
@@ -160,7 +151,7 @@ int select_button(SDL_Renderer *renderer)
     //SDL_RenderPresent(renderer);
 }*/
 
-int event_click(SDL_Renderer *renderer, Square square[][8])
+int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
 {
 
     int quit=0;
@@ -176,21 +167,56 @@ int event_click(SDL_Renderer *renderer, Square square[][8])
         {
             switch(i)
             {
-            case 0://IA
+            case 0://==================================    IA
                 SDL_RenderClear(renderer);
-                game(renderer, square, IA);
+                nouvellePartie(IA,partie);
+                initialize_pawns_pos(square);
+                game(renderer, square, IA, partie);
                 quit=1;
                 break;
-            case 1://Non IA
+            case 1: //==================================    Non IA
                 SDL_RenderClear(renderer);
-                game(renderer, square, NO_IA);
+                nouvellePartie(NO_IA,partie);
+                initialize_pawns_pos(square);
+                game(renderer, square, NO_IA , partie);
                 quit=1;
                 break;
-            case 2://Charger partie
+            case 2://==================================    Charger partie
+                SDL_RenderClear(renderer);
+                Game partiesList[saveSize()];
+                listerParties(partiesList);
+                /// Afficher le tableau partieList
+                /* pour rappel :
+                    struct Game :
+                        int id;
+                        int ia;
+                        int scoreB;
+                        int scoreN;
+                        int winner;
+                        int tour;
+                        int plateau[8][8];
+                */
+
+                int choice;
+                choice = 1; ///  faire un moyen de selectionner la partie     !!! ( range : [1;size] )
+
+
+                chargerPartie(choice,partie);
+                for(int c = 0; c<8 ; c++){
+                    for(int l = 0; l<8 ; l++){
+                        square[c][l].pawn = partie->plateau[c][l];
+                        square[c][l].isSelected = 0;
+                        square[c][l].isMoveOk = 0;
+                    }
+                }
+                game(renderer,square,partie->ia,partie);
                 quit=1;
                 break;
-            case 3://Score
+            case 3://==================================    Scores
                 SDL_RenderClear(renderer);
+                Game partiesList[saveSize()];
+                listerParties(partiesList);
+                /// Afficher le tableau partieList
                 break;
             case 4://Quitter
                 quit=1;

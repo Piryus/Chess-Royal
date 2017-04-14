@@ -22,90 +22,135 @@ en jeu:
 
 */
 
-void deplacement(int id, int toX, int toY){
+void Save( Game * partie ){  //OK
+    printf("----------------  SAVE  -----------------\n");
     FILE *fic;
-    fic = fopen("PartiesListe.dat","r+");
-    game lPart;
-    while(lPart.id != id){
-        fread(&lPart, sizeof(lPart), 1, fic);
+    int size = saveSize();
+    printf("    Size : %d \n",size);
+    //on charge tout dans un meme tableau
+    fic = fopen("PartiesListe.dat","r");
+    Game lPart[size];
+    for(int a = 0; a<size ; a++){
+        fread(&lPart[a], sizeof(Game), 1, fic);
+        printf("fread %d : [id:%d]  \n",a,lPart[a].id);
     }
-    lPart.pions[id].x = toX;
-    lPart.pions[id].y = toY;
-    fseek(fic,-sizeof(lPart),SEEK_CUR);
-    fwrite(&lPart, sizeof(lPart), 1, fic);
+    fclose(fic);
+    //on cherche la partie apropriée
+    int i = 0;
+    while(lPart[i].id != partie->id){
+        i++;
+    }
+    printf(" id %d = id %d >OK\n",lPart[i].id ,partie->id);
+    //on modifie la partie apropriée
+    lPart[i].ia = partie->ia;
+    lPart[i].id = partie->id;
+    lPart[i].winner = partie->winner;
+    lPart[i].scoreB = partie->scoreB;
+    lPart[i].scoreN = partie->scoreN;
+    lPart[i].tour = partie->tour;
+    for(int c = 0; c<8 ; c++){
+        for(int l = 0; l<8 ; l++){
+            lPart[i].plateau[c][l] = partie->plateau[c][l];
+        }
+    }
+    //on réécrit tout dans le fichier
+    fic = fopen("PartiesListe.dat","w+");
+    printf("rewrite all \n");
+    for(int a = 0; a<size ; a++){
+        fwrite(&lPart[a], sizeof(Game), 1, fic);
+    }
+    fclose(fic);
+    printf("--------------  END SAVE  ---------------\n");
 }
 //***************************************************************************************************************
-Game nouvellePartie(){
+void nouvellePartie(int ia, Game * partie){// OK
+    //recherche de l'id maximal
     FILE *fic;
-    int pos = 0;
-    fic = fopen("Sauvegardes/PartiesListe.dat","a");
-    fgetpos(fic,&pos);
-    if(fic == NULL){fic = fopen("Sauvegardes/PartiesListe.dat","w");pos = 0;}
-    game nPart;
-    printf("1 = Avec IA / 0 = 2 joueurs\n");
-    scanf("%d",&nPart.ia);
-    nPart.id = pos/sizeof(game);
-    nPart.scoreB = 0 ;
-    nPart.scoreW = 0 ;
-    nPart.turn = 1 ; //(Tour impair = blanc)
-    int i; int j;
-    init_pawn(&nPart.pions);
-    fwrite(&nPart, sizeof(nPart), 1, fic);
+    fic = fopen("PartiesListe.dat","r");
+    Game X;
+    int maxid = 0;
+    if(fic != NULL){
+        while(!feof(fic)){
+            fread(&X, sizeof(Game), 1, fic);
+            if(X.id>maxid){maxid = X.id;}
+        }
+        fclose(fic);
+    }
+    printf("MAX - ID : %d \n",maxid);
+    //création de la partie
+    partie->id = maxid+1;
+    partie->ia = ia;
+    partie->winner = _VIDE ;
+    partie->scoreB = 0 ;
+    partie->scoreN = 0 ;
+    partie->tour = 1 ; //(Tour impair = blanc)
+    for(int c = 0;c<8;c++){
+        partie->plateau[c][0] = _NOIR;
+        partie->plateau[c][1] = _NOIR;
+        partie->plateau[c][2] = _VIDE;
+        partie->plateau[c][3] = _VIDE;
+        partie->plateau[c][4] = _VIDE;
+        partie->plateau[c][5] = _VIDE;
+        partie->plateau[c][6] = _BLANC;
+        partie->plateau[c][7] = _BLANC;
+    }
+    //Ecriture
+    fic = fopen("PartiesListe.dat","a");
+    if(fic == NULL){
+        fic = fopen("PartiesListe.dat","w+");
+        printf("Création du fichier de sauvegarde\n");
+    }
+    printf("Creation de la sauvegarde %d (IA:%d)", partie->id , partie->ia);
+    fwrite(partie, sizeof(Game), 1, fic);
     fclose(fic);
 }
 //***************************************************************************************************************
-Game chargerPartie(int id){
+void chargerPartie(int id, Game * partie){ // OK
     FILE *fic;
-    fic = fopen("Sauvegardes/PartiesListe.dat","r");
-    game lPart;
+    fic = fopen("PartiesListe.dat","r");
     if(fic != NULL){
-        Partie lPart;
-        while(lPart.id != id){
-            fread(&lPart, sizeof(lPart), 1, fic);
+        while((partie->id != id)&&(feof(fic)!=1)){
+            fread(partie, sizeof(Game), 1, fic);
         }
-        return lPart;
+        if(partie->id != id)
+            partie->id = -1;
     }else{
-        /* Retourner une Erreur */
-        return lPart;
+        partie->id = -1;
     }
-}
-//***************************************************************************************************************
-int listerParties(){
-    FILE *fic;
-    fic = fopen("Sauvegardes/PartiesListe.dat","r");
-    Partie lPart;
-    if(fic != NULL){
-        Partie lPart;
-        printf(" IA/ id : blanc - noir  tour\n");
-            fread(&lPart, sizeof(lPart), 1, fic);
-        while(feof(fic)!=1){
-            printf("%3d(%d) : %3d  -  %3d  %4d\n",lPart.id,lPart.ia,lPart.scoreB,lPart.scoreN,lPart.tour);
-            fread(&lPart, sizeof(lPart), 1, fic);
-        }
-        return 1;
-    }else{
-        printf("Pas de parties sauvegardée");
-        return 0;
-    }
-}
-//***************************************************************************************************************
-void afficherScores(){
-    FILE *fic;
-    fic = fopen("Sauvegardes/PartiesListe.dat","r");
-    Partie lPart;
-    if(fic != NULL){
-        Partie lPart;
-        printf(" IA/ id : blanc - noir  tour\n");
-            fread(&lPart, sizeof(lPart), 1, fic);
-        while(feof(fic)!=1){
-            printf("%3d(%d) : %3d  -  %3d  %4d\n",lPart.id,lPart.ia,lPart.scoreB,lPart.scoreN,lPart.tour);
-            fread(&lPart, sizeof(lPart), 1, fic);
-        }
-        return 1;
-    }else{
-        printf("Pas de parties sauvegardée");
-        return 0;
-    }
-}
-//***************************************************************************************************************
+    fclose(fic);
 
+}
+//***************************************************************************************************************
+int listerParties(Game parties[]){ // OK ; écrit la liste des partie dans le tableau que l'on lui donne et retourne 1  en cas d'erreur
+    FILE *fic;
+    fic = fopen("PartiesListe.dat","r");
+    if(fic != NULL){
+        // on met tout dans un tableau
+        int size = saveSize();
+        for(int a = 0; a<size ; a++){
+            fread(&parties[a], sizeof(Game), 1, fic);
+            printf("fread %d : [id:%d]  \n",a,parties[a].id);
+        }
+        fclose(fic);
+        return 0;
+    }else{
+        printf("Pas de parties sauvegardée");
+        return 1;
+    }
+}
+//***************************************************************************************************************
+int saveSize(){
+    Game X;
+    FILE *fic;
+    fic = fopen("PartiesListe.dat","r");
+    int size = 0;
+    if(fic != NULL){
+        while(!feof(fic)){
+            size ++;
+            fread(&X, sizeof(Game), 1, fic);
+        }
+        fclose(fic);
+        size --; //correction nécéssaire pour windows
+    }
+    return size;
+}

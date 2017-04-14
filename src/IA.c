@@ -111,7 +111,7 @@ float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,Joueur *
     }
 
     float poids;
-    poids = jN->gamma[0]*(pN-pB) + jN->gamma[1]*(dN-dB)/50 + jN->gamma[2]*(bN-bB) + jN->gamma[3]*(iN-iB)*5  + jN->gamma[4]*(mN-mB) + jN->gamma[5]*(aN-aB)/100 + jN->gamma[6]*(wN-wB)*100;
+    poids = jN->gamma[0]*(pN-pB) + jN->gamma[1]*(dN-dB) + jN->gamma[2]*(bN-bB) + jN->gamma[3]*(iN-iB)  + jN->gamma[4]*(mN-mB) + jN->gamma[5]*(aN-aB) + jN->gamma[6]*(wN-wB);
     //printf(" %2.2f + %2.2f + %2.2f + %2.2f + %2.2f + %2.2f + %2.2f = %2.2f \n",jN->gamma[0]*(pN-pB),jN->gamma[1]*(dN-dB)/50,jN->gamma[2]*(bN-bB),jN->gamma[3]*(iN-iB)*5,jN->gamma[4]*(mN-mB),jN->gamma[5]*(aN-aB)/100,jN->gamma[6]*(wN-wB)*100,poids );
     return poids;
 

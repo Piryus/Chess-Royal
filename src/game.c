@@ -22,16 +22,16 @@ SDL_Rect get_clicked_square(int x, int y)
     }
     return clickedSquare;
 }
+
 //Fonction principal gérant le jeu
-void game(SDL_Renderer *renderer, Square square[][8], int ia)
+void game(SDL_Renderer *renderer, Square square[][8], int ia, Game *partie)
 {
     SDL_RenderClear(renderer);
     render_background(renderer);
     render_base(renderer);
     render_squares(renderer);
-    initialize_pawns_pos(square);
     render_pawns(renderer, square);
-    wait_for_event(renderer, square, ia);
+    wait_for_event(renderer, square, ia, partie);
 }
 
 void initialize_pawns_pos(Square square[][8])
@@ -63,16 +63,19 @@ int numcase_to_coord_x(int numcase)
 {
     return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
 }
+
 //Fonction transposant le numéro d'une case en abscisses (de 0 à 8) en coordonées du coin supérieur gauche de cette case(x)
 int numcase_to_coord_y(int numcase)
 {
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
 }
+
 //Fonction transposant le numéro d'une case en coordonées pour le pion (x)
 int posx(int numcase)
 {
     return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
+
 //Fonction transposant le numéro d'une case en coordonées pour le pion (y)
 int posy(int numcase)
 {
@@ -160,10 +163,9 @@ void get_authorized_moves(SDL_Rect rect, Square square[][8], int tour)
     }
 }
 
-void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia)
+void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *partie)
 {
     int stop = 0;
-    int tour = 1;
     SDL_Event event;
     SDL_Rect clickedSquare;
     while(!stop)
@@ -197,8 +199,8 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia)
                     render_squares(renderer);
                     if(move_pawn_to(clickedSquare, square)==1)
                     {
-                        printf("Tour : %d\n", tour);
-                        tour ++; //Tour suivant
+                        printf("###########################################\nTour : %d\n", partie->tour);
+                            partie->tour = partie->tour + 1;
                         if(ia == 1)
                         {
                             // INIT de l'IA
@@ -214,14 +216,20 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia)
                             Possibillite bestAction;
                             findBestAction(&bestAction, _NOIR, square, &jN);
                             deplacement(bestAction, square, _NOIR);
-                            tour ++;
+                            partie->tour = partie->tour + 1;
                         }
+                        for(int c = 0; c<8 ; c++){
+                            for(int l = 0; l<8 ; l++){
+                                partie->plateau[c][l] = square[c][l].pawn;
+                            }
+                        }
+                        Save( partie );
                     }
                     reset_OK_moves(square);
-                    get_authorized_moves(clickedSquare, square, tour);
+                    get_authorized_moves(clickedSquare, square, partie->tour);
                     render_authorized_moves(clickedSquare, renderer, square);
                     render_pawns(renderer, square);
-                    getWinner(renderer, square, tour);
+                    getWinner(renderer, square , partie);
                 }
             }
             break;
@@ -231,7 +239,7 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia)
     }
 }
 
-void getWinner(SDL_Renderer *renderer, Square square[][8], int tour)
+void getWinner(SDL_Renderer *renderer, Square square[][8], Game * game)
 {
     int move_counter=0;
     for(int i = 0; i <= 7; i++)
@@ -239,10 +247,12 @@ void getWinner(SDL_Renderer *renderer, Square square[][8], int tour)
         if(square[i][7].pawn == _NOIR)
         {
             render_victory_screen(renderer, _NOIR);
+            game->winner = _NOIR;
         }
         if(square[i][0].pawn == _BLANC)
         {
             render_victory_screen(renderer, _BLANC);
+            game->winner = _BLANC;
         }
     }
 //On vérifie qu'un jouer n'est pas bloqué, si c'est le cas, l'autre joueur l'emporte.
