@@ -168,6 +168,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                         int tour;
                         int plateau[8][8];
                 */
+                load_game_menu(renderer);
                 int choice;
                 choice = 1; //  faire un moyen de selectionner la partie     !!! ( range : [1;size] )
                 chargerPartie(choice, partie);
