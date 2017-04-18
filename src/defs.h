@@ -124,6 +124,7 @@ extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
 extern SDL_Texture *loadFont_Blended(SDL_Renderer *renderer, TTF_Font *police, char texte[], int red, int green, int blue);
 extern SDL_Texture *loadIMG(char path[], SDL_Renderer *renderer);
 extern int init(SDL_Window **window,SDL_Renderer **renderer);
+extern void render_button(SDL_Renderer *renderer, char text[], SDL_Rect button);
 
 //Fonctions utilisées par le menu
 extern void menu(void);
@@ -131,7 +132,6 @@ extern void render_menu_buttons(SDL_Renderer *renderer);
 extern void render_menu_background(SDL_Renderer *renderer,Square square[][8]);
 extern void render_game_title(SDL_Renderer *renderer);
 extern void init_random_pawns_pos(Square square[][8]);
-extern void render_menu_button_text(SDL_Renderer *renderer, int menu_button_id, char texte[]);
 extern int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie);
 
 //Fonctions de l'IA

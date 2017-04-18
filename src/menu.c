@@ -45,80 +45,21 @@ void menu(void)
     }
 }
 
-void render_button(SDL_Renderer *renderer, char text[], int x, int y, int w, int h)
-{
-    SDL_Rect button = {x, y, w, h};
-    SDL_Rect button_outline = {0, 0, 0, 0};
-    int outline = 1;
-    SDL_Texture *button_text = NULL;
-    SDL_Rect font_rect;
-    TTF_Font *font_OpenSans = NULL;
-    SDL_SetRenderDrawColor(renderer, 52, 152, 219, 255);//Couleur des boutons (intérieur)
-    SDL_RenderFillRect(renderer, &button);
-    SDL_SetRenderDrawColor(renderer, 41, 128, 185, 255);//Couleur des boutons (contour)
-    while(outline < BUTTON_OUTLINE)
-    {
-        for(int i = 0; i < (NB_MENU_BUTTONS); i++)
-        {
-            button_outline.w = w + 2 * outline;
-            button_outline.h = h + 2 * outline;
-            button_outline.x = w - outline;
-            button_outline.y = h - outline;
-            SDL_RenderDrawRect(renderer, &button_outline);
-        }
-        outline++;
-    }
-    SDL_RenderPresent(renderer);
-    font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
-    button_text = loadFont_Blended(renderer, font_OpenSans, texte, 236, 240, 241);
-    SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(button_text, renderer, x - font_rect.w/ 2, y - font_rect.h/2);
-    SDL_RenderPresent(renderer);
-}
-
 void render_menu_buttons(SDL_Renderer *renderer)
 {
-    SDL_Rect menu_tile = {0, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
-    SDL_Rect menu_tile_outline = {0, 0, 0, 0};
-    SDL_SetRenderDrawColor(renderer, 52, 152, 219, 255);//Couleur des boutons (intérieur)
-    int outline = 1;
+    SDL_Rect menu_button[NB_MENU_BUTTONS];
     for(int i = 0; i < (NB_MENU_BUTTONS); i++)
     {
-        menu_tile.x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2;
-        menu_tile.y = WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * i;
-        SDL_RenderFillRect(renderer, &menu_tile);
+        menu_button[i].w = BUTTON_WIDTH;
+        menu_button[i].h = BUTTON_HEIGHT;
+        menu_button[i].x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2;
+        menu_button[i].y = WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * i;
     }
-    SDL_SetRenderDrawColor(renderer, 41, 128, 185, 255);//Couleur des boutons (contour)
-    while(outline < BUTTON_OUTLINE)
-    {
-        for(int i = 0; i < (NB_MENU_BUTTONS); i++)
-        {
-            menu_tile_outline.w = BUTTON_WIDTH + 2 * outline;
-            menu_tile_outline.h = BUTTON_HEIGHT + 2 * outline;
-            menu_tile_outline.x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2 - outline;
-            menu_tile_outline.y = WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * i - outline;
-            SDL_RenderDrawRect(renderer, &menu_tile_outline);
-        }
-        outline++;
-    }
-    SDL_RenderPresent(renderer);
-    render_menu_button_text(renderer, 0, "Solo contre l'IA");
-    render_menu_button_text(renderer, 1, "Jouer sur le même PC");
-    render_menu_button_text(renderer, 2, "Charger une partie");
-    render_menu_button_text(renderer, 3, "Scores");
-    render_menu_button_text(renderer, 4, "Quitter le jeu");
-}
-
-void render_menu_button_text(SDL_Renderer *renderer, int menu_button_id, char texte[])
-{
-    SDL_Texture *button_text = NULL;
-    SDL_Rect font_rect;
-    TTF_Font *font_OpenSans = NULL;
-    font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
-    button_text = loadFont_Blended(renderer, font_OpenSans, texte, 236, 240, 241);
-    SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT - font_rect.h) / 2 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * menu_button_id);
-    SDL_RenderPresent(renderer);
+    render_button(renderer, "Solo contre l'IA", menu_button[0]);
+    render_button(renderer, "Jouer sur le même PC", menu_button[1]);
+    render_button(renderer, "Charger une partie", menu_button[2]);
+    render_button(renderer, "Scores", menu_button[3]);
+    render_button(renderer, "Quitter le jeu", menu_button[4]);
 }
 
 void render_menu_background(SDL_Renderer *renderer, Square square[][8])
