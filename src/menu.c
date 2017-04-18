@@ -45,6 +45,37 @@ void menu(void)
     }
 }
 
+void render_button(SDL_Renderer *renderer, char text[], int x, int y, int w, int h)
+{
+    SDL_Rect button = {x, y, w, h};
+    SDL_Rect button_outline = {0, 0, 0, 0};
+    int outline = 1;
+    SDL_Texture *button_text = NULL;
+    SDL_Rect font_rect;
+    TTF_Font *font_OpenSans = NULL;
+    SDL_SetRenderDrawColor(renderer, 52, 152, 219, 255);//Couleur des boutons (intérieur)
+    SDL_RenderFillRect(renderer, &button);
+    SDL_SetRenderDrawColor(renderer, 41, 128, 185, 255);//Couleur des boutons (contour)
+    while(outline < BUTTON_OUTLINE)
+    {
+        for(int i = 0; i < (NB_MENU_BUTTONS); i++)
+        {
+            button_outline.w = w + 2 * outline;
+            button_outline.h = h + 2 * outline;
+            button_outline.x = w - outline;
+            button_outline.y = h - outline;
+            SDL_RenderDrawRect(renderer, &button_outline);
+        }
+        outline++;
+    }
+    SDL_RenderPresent(renderer);
+    font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
+    button_text = loadFont_Blended(renderer, font_OpenSans, texte, 236, 240, 241);
+    SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(button_text, renderer, x - font_rect.w/ 2, y - font_rect.h/2);
+    SDL_RenderPresent(renderer);
+}
+
 void render_menu_buttons(SDL_Renderer *renderer)
 {
     SDL_Rect menu_tile = {0, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
