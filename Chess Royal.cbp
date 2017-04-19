@@ -74,7 +74,7 @@
 		<Unit filename="src/menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/menu_game.c">
+		<Unit filename="src/menu_LoadGame.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

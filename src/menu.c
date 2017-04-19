@@ -55,8 +55,8 @@ void render_menu_buttons(SDL_Renderer *renderer)
         menu_button[i].x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2;
         menu_button[i].y = WINDOW_HEIGHT / 4 + (BUTTON_HEIGHT + MENU_BUTTON_SPACING) * i;
     }
-    render_button(renderer, "Solo contre l'IA", menu_button[0]);
-    render_button(renderer, "Jouer sur le même PC", menu_button[1]);
+    render_button(renderer, "Jouer contre l'IA", menu_button[0]);
+    render_button(renderer, "Jouer à deux", menu_button[1]);
     render_button(renderer, "Charger une partie", menu_button[2]);
     render_button(renderer, "Scores", menu_button[3]);
     render_button(renderer, "Quitter le jeu", menu_button[4]);
@@ -168,7 +168,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                         int tour;
                         int plateau[8][8];
                 */
-                load_game_menu(renderer);
+                load_game_menu(renderer,partiesList);
                 int choice;
                 choice = 1; //  faire un moyen de selectionner la partie     !!! ( range : [1;size] )
                 chargerPartie(choice, partie);
