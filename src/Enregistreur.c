@@ -150,7 +150,7 @@ int saveSize(){
             fread(&X, sizeof(Game), 1, fic);
         }
         fclose(fic);
-        size --; //correction nécéssaire pour windows
+        size --; //correction nécessaire pour windows
     }
     return size;
 }

@@ -13,7 +13,7 @@
 
 //Menu
 #define MENU_BUTTON_SPACING 50
-#define NB_MENU_BUTTONS 5
+#define NB_MENU_BUTTONS 4
 #define BUTTON_WIDTH WINDOW_WIDTH/4
 #define BUTTON_HEIGHT WINDOW_HEIGHT/15
 #define BUTTON_OUTLINE 5
@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

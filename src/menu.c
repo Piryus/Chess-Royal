@@ -58,8 +58,8 @@ void render_menu_buttons(SDL_Renderer *renderer)
     render_button(renderer, "Jouer contre l'IA", menu_button[0]);
     render_button(renderer, "Jouer à deux", menu_button[1]);
     render_button(renderer, "Charger une partie", menu_button[2]);
-    render_button(renderer, "Scores", menu_button[3]);
-    render_button(renderer, "Quitter le jeu", menu_button[4]);
+    //render_button(renderer, "Scores", menu_button[3]);
+    render_button(renderer, "Quitter le jeu", menu_button[3]);
 }
 
 void render_menu_background(SDL_Renderer *renderer, Square square[][8])
@@ -128,6 +128,7 @@ int select_button(SDL_Renderer *renderer)
 int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
 {
     int quit = 0;
+    int choice=1;
     int cursor_x, cursor_y;
     SDL_GetMouseState(&cursor_x, &cursor_y);
     Game partiesList[saveSize()];
@@ -157,20 +158,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
             case 2://==================================    Charger partie
                 SDL_RenderClear(renderer);
                 listerParties(partiesList);
-                // Afficher le tableau partieList
-                /* pour rappel :
-                    struct Game :
-                        int id;
-                        int ia;
-                        int scoreB;
-                        int scoreN;
-                        int winner;
-                        int tour;
-                        int plateau[8][8];
-                */
-                load_game_menu(renderer,partiesList);
-                int choice;
-                choice = 1; //  faire un moyen de selectionner la partie     !!! ( range : [1;size] )
+                /*choice=*/load_game_menu_and_get_choice(renderer,partiesList);
                 chargerPartie(choice, partie);
                 for(int c = 0; c < 8 ; c++)
                 {
@@ -184,7 +172,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                 game(renderer, square, partie->ia, partie);
                 quit = 1;
                 break;
-            case 3://==================================    Scores
+            case 3://==================================  Scores ####TO BE REMOVED####
                 SDL_RenderClear(renderer);
                 listerParties(partiesList);
                 // Afficher le tableau partieList
