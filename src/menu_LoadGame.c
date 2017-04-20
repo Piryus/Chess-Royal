@@ -11,6 +11,7 @@ int load_game_menu_and_get_choice(SDL_Renderer *renderer, Game partiesList[saveS
     load_menu_header(renderer);
     render_games_buttons(renderer);
     render_games_infos(renderer, partiesList);
+    render_back_to_menu_button(renderer);
     while(!stop)
     {
         SDL_WaitEvent(&event);
@@ -132,8 +133,21 @@ int get_choice(SDL_Renderer *renderer)
                 && (cursor_x < (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 6 + 70)
                 && (cursor_y < (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (i + 1) - 30 + 70))
         {
-            choice = i;
+            choice = i+1;
         }
     }
+    if((cursor_x>WINDOW_WIDTH-(BUTTON_WIDTH-150)-10)
+       &&(cursor_x<WINDOW_WIDTH-10)
+       &&(cursor_y>20)
+       &&(cursor_y<BUTTON_HEIGHT+20))
+    {
+        choice=-2;
+    }
     return choice;
+}
+
+void render_back_to_menu_button(SDL_Renderer *renderer)
+{
+    SDL_Rect back_button={WINDOW_WIDTH-(BUTTON_WIDTH-150)-10, 20,BUTTON_WIDTH-150,BUTTON_HEIGHT};
+    render_button(renderer,"Retour", back_button);
 }

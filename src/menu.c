@@ -7,11 +7,12 @@ void menu(void)
     SDL_Renderer *renderer = NULL;
     SDL_Event event;
     int continuer = 1;
+    int quit;
+    Game partie;
     init(&window, &renderer);
     render_menu_background(renderer, square);
     render_game_title(renderer);
     render_menu_buttons(renderer);
-    Game partie;
     while(continuer)
     {
         SDL_WaitEvent(&event);
@@ -31,9 +32,17 @@ void menu(void)
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if(event_click(renderer, square, &partie))
+            quit = event_click(renderer, square, &partie);
+            if(quit == 1)
             {
                 continuer = 0;
+            }
+            else if(quit == -1)
+            {
+                SDL_RenderClear(renderer);
+                render_menu_background(renderer, square);
+                render_game_title(renderer);
+                render_menu_buttons(renderer);
             }
             break;
         case SDL_MOUSEMOTION:
@@ -128,7 +137,7 @@ int select_button(SDL_Renderer *renderer)
 int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
 {
     int quit = 0;
-    int choice=1;
+    int choice = 1;
     int cursor_x, cursor_y;
     SDL_GetMouseState(&cursor_x, &cursor_y);
     Game partiesList[saveSize()];
@@ -158,26 +167,30 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
             case 2://==================================    Charger partie
                 SDL_RenderClear(renderer);
                 listerParties(partiesList);
-                /*choice=*/load_game_menu_and_get_choice(renderer,partiesList);
-                chargerPartie(choice, partie);
-                for(int c = 0; c < 8 ; c++)
+                choice = load_game_menu_and_get_choice(renderer, partiesList);
+                printf("%d",choice);
+                if(choice >= 0)
                 {
-                    for(int l = 0; l < 8 ; l++)
+                    chargerPartie(choice, partie);
+                    for(int c = 0; c < 8 ; c++)
                     {
-                        square[c][l].pawn = partie->plateau[c][l];
-                        square[c][l].isSelected = 0;
-                        square[c][l].isMoveOk = 0;
+                        for(int l = 0; l < 8 ; l++)
+                        {
+                            square[c][l].pawn = partie->plateau[c][l];
+                            square[c][l].isSelected = 0;
+                            square[c][l].isMoveOk = 0;
+                        }
                     }
+                    game(renderer, square, partie->ia, partie);
+                    quit = 1;
                 }
-                game(renderer, square, partie->ia, partie);
-                quit = 1;
+                else
+                {
+                    quit = -1;
+                }
                 break;
-            case 3://==================================  Scores ####TO BE REMOVED####
-                SDL_RenderClear(renderer);
-                listerParties(partiesList);
-                // Afficher le tableau partieList
                 break;
-            case 4://Quitter
+            case 3://Quitter
                 quit = 1;
                 break;
             default:
