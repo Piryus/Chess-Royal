@@ -168,6 +168,7 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
     int stop = 0;
     SDL_Event event;
     SDL_Rect clickedSquare;
+    render_turn(renderer,partie);
     while(!stop)
     {
         SDL_WaitEvent(&event);
@@ -231,9 +232,10 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                     get_authorized_moves(clickedSquare, square, partie->tour);
                     render_authorized_moves(clickedSquare, renderer, square);
                     render_pawns(renderer, square);
-                    if(getWinner(renderer, square, partie)!=0)
+                    render_turn(renderer,partie);
+                    if(getWinner(renderer, square, partie) != 0)
                     {
-                        stop=1;
+                        stop = 1;
                     }
                 }
             }
@@ -244,10 +246,10 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
     }
 }
 
-int getWinner(SDL_Renderer *renderer, Square square[][8], Game * game)
+int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game)
 {
 //    int move_counter=0;
-int winner=0;
+    int winner = 0;
     for(int i = 0; i <= 7; i++)
     {
         if(square[i][7].pawn == _NOIR)
@@ -255,14 +257,14 @@ int winner=0;
             render_victory_screen(renderer, _NOIR);
             wait_for_click_on_button(renderer);
             game->winner = _NOIR;
-            winner=_NOIR;
+            winner = _NOIR;
         }
         if(square[i][0].pawn == _BLANC)
         {
             render_victory_screen(renderer, _BLANC);
             wait_for_click_on_button(renderer);
             game->winner = _BLANC;
-            winner=_BLANC;
+            winner = _BLANC;
         }
     }
 //On vérifie qu'un jouer n'est pas bloqué, si c'est le cas, l'autre joueur l'emporte.
@@ -311,7 +313,7 @@ void wait_for_click_on_button(SDL_Renderer *renderer)
             }
             break;
         case SDL_QUIT:
-            stop=1;
+            stop = 1;
             break;
         }
     }

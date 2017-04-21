@@ -21,16 +21,7 @@ void menu(void)
         case SDL_QUIT:
             continuer = 0;
             break;
-        case SDL_KEYDOWN:
-            switch(event.key.keysym.sym)
-            {
-            case SDLK_ESCAPE:
-                continuer = 0;
-                break;
-            default:
-                break;
-            }
-            break;
+
         case SDL_MOUSEBUTTONDOWN:
             quit = event_click(renderer, square, &partie);
             if(quit == 1)

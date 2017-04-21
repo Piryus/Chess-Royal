@@ -144,7 +144,29 @@ void render_victory_screen(SDL_Renderer *renderer, int color)
     RendTex(victory_msg, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
     SDL_Texture *button_text = NULL;
     TTF_Font *font_OpenSans = NULL;
-    SDL_Rect button = {(WINDOW_WIDTH - BUTTON_WIDTH) / 2, WINDOW_HEIGHT / 1.5, BUTTON_WIDTH+100, BUTTON_HEIGHT};
+    SDL_Rect button = {(WINDOW_WIDTH - BUTTON_WIDTH) / 2, WINDOW_HEIGHT / 1.5, BUTTON_WIDTH + 100, BUTTON_HEIGHT};
     render_button(renderer, "Retour au menu principal", button);
+    SDL_RenderPresent(renderer);
+}
+
+void render_turn(SDL_Renderer *renderer, Game *partie)
+{
+    SDL_Texture *turn;
+    SDL_Rect font_rect;
+    char text[20];
+    char color[10];
+    if(partie->tour%2 == 1)
+    {
+        strcpy(color, "Blanc");
+    }
+    else
+    {
+        strcpy(color, "Noir");
+    }
+    sprintf(text, "Tour : %d (%s)", partie->tour, color);
+    TTF_Font *font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
+    turn = loadFont_Blended(renderer, font_OpenSans, text, 236, 240, 241);
+    SDL_QueryTexture(turn, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(turn, renderer, (WINDOW_WIDTH - font_rect.w) / 2, 30);
     SDL_RenderPresent(renderer);
 }
