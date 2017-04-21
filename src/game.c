@@ -210,12 +210,12 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                         if(ia == 1)
                         {
                             // INIT de l'IA
-                            Joueur jN;
+                            JoueurIA jN;
                             jN.gamma[0] = 314 ;
                             jN.gamma[1] = 40 ;
-                            jN.gamma[2] = 42.5 ;
+                            jN.gamma[2] = 42 ;
                             jN.gamma[3] = 47 ;
-                            jN.gamma[4] = -133.6 ;
+                            jN.gamma[4] = -133 ;
                             jN.gamma[5] = 121 ;
                             jN.gamma[6] = 53 ;
                             //Fonctions d'action de l'ia
@@ -318,14 +318,38 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
 
     if(blocked == 1){
         if(game->scoreB>game->scoreN){
+            Joueur jB;
+            Joueur jN;
+            chargerJoueur(game->joueurB, &jB);
+            chargerJoueur(game->joueurN, &jN);
+            jB.nbWin++;jB.nbGame++;
+            jN.nbLose++;jN.nbGame++;
+            SaveJoueur( &jB );
+            SaveJoueur( &jN );
             render_victory_screen(renderer, _BLANC);
             wait_for_click_on_button(renderer);
         }else{
             if(game->scoreB<game->scoreN){
+                Joueur jB;
+                Joueur jN;
+                chargerJoueur(game->joueurB, &jB);
+                chargerJoueur(game->joueurN, &jN);
+                jB.nbLose++;jB.nbGame++;
+                jN.nbWin++;jN.nbGame++;
+                SaveJoueur( &jB );
+                SaveJoueur( &jN );
                 render_victory_screen(renderer, _NOIR);
-            wait_for_click_on_button(renderer);
+                wait_for_click_on_button(renderer);
             }else{
             /// Egalité !
+                Joueur jB;
+                Joueur jN;
+                chargerJoueur(game->joueurB, &jB);
+                chargerJoueur(game->joueurN, &jN);
+                jB.nbEgal++;jB.nbGame++;
+                jN.nbEgal++;jN.nbGame++;
+                SaveJoueur( &jB );
+                SaveJoueur( &jN );
             }
         }
     }
@@ -340,6 +364,16 @@ int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game)
     {
         if(square[i][7].pawn == _NOIR)
         {
+            Joueur jB;
+            Joueur jN;
+            chargerJoueur(game->joueurB, &jB);
+            chargerJoueur(game->joueurN, &jN);
+            jB.nbLose++;jB.nbGame++;
+            jN.nbWin++;jN.nbGame++;
+            SaveJoueur( &jB );
+            SaveJoueur( &jN );
+            render_victory_screen(renderer, _BLANC);
+            wait_for_click_on_button(renderer);
             render_victory_screen(renderer, _NOIR);
             wait_for_click_on_button(renderer);
             game->winner = _NOIR;
@@ -347,6 +381,16 @@ int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game)
         }
         if(square[i][0].pawn == _BLANC)
         {
+            Joueur jB;
+            Joueur jN;
+            chargerJoueur(game->joueurB, &jB);
+            chargerJoueur(game->joueurN, &jN);
+            jB.nbWin++;jB.nbGame++;
+            jN.nbLose++;jN.nbGame++;
+            SaveJoueur( &jB );
+            SaveJoueur( &jN );
+            render_victory_screen(renderer, _BLANC);
+            wait_for_click_on_button(renderer);
             render_victory_screen(renderer, _BLANC);
             wait_for_click_on_button(renderer);
             game->winner = _BLANC;

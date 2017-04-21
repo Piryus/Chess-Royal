@@ -19,7 +19,7 @@ void affPlt(int plt[][8]){
     }
 }
 
-float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,Joueur *jN){
+float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,JoueurIA *jN){
     int implt[8][8];
     for(int c = 0;c<8;c++){
         for(int l = 0;l<8;l++){
@@ -117,7 +117,7 @@ float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,Joueur *
 
 }
 
-void listActions(Possibillite actionlist[] , Square plateau[][8], Joueur *jN){
+int listActions(Possibillite actionlist[] , Square plateau[][8], JoueurIA *jN){
     int actAdr = 0;
 
     for(int j = 0;j < 40 ; j++){actionlist[j].aX = -1;actionlist[j].aY = -1;actionlist[j].deX = -1;actionlist[j].deY = -1;actionlist[j].poids = -10000000;}
@@ -168,9 +168,10 @@ void listActions(Possibillite actionlist[] , Square plateau[][8], Joueur *jN){
             actAdr++;
         }
     }
+    return actAdr;
 }
 
-int findBestAction(Possibillite *bestAction , Square plateau[][8],Joueur *jN){
+int findBestAction(Possibillite *bestAction , Square plateau[][8],JoueurIA *jN){
     Possibillite actionlist[50];
 
     listActions( actionlist , plateau ,jN);

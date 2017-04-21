@@ -54,8 +54,17 @@ Example : X = square[2][5]
 */
 
 
-typedef struct Joueur{
+typedef struct JoueurIA{
     float gamma[7] ;
+} JoueurIA;
+
+typedef struct Joueur{
+    int id;
+    char Nom[40] ;
+    int nbWin ;
+    int nbLose ;
+    int nbEgal ;
+    int nbGame ;
 } Joueur;
 
 typedef struct Possibillite{
@@ -84,6 +93,8 @@ typedef struct Game
 {
     int id;
     int ia;
+    int joueurB;
+    int joueurN;
     int scoreB;
     int scoreN;
     int winner;
@@ -116,10 +127,15 @@ extern void render_victory_screen(SDL_Renderer *renderer, int color);
 
 //fonction gérant le fichier de sauvegarde
 extern void Save( Game * game );
-extern void nouvellePartie(int ia, Game * game);
+extern void nouvellePartie(int ia, Game * partie ,int idJB,int idJN);
 extern void chargerPartie(int id, Game * game);
 extern int listerParties(Game parties[]);
 extern int saveSize();
+extern void nouveauJoueur(char nom[]);
+extern void chargerJoueur(int id, Joueur * joueur);
+extern void SaveJoueur( Joueur * joueur );
+extern int nbJoueur();
+extern int listerJoueur(Joueur joueurs[]);
 
 //Fonctions "raccourcis" SDL
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
@@ -138,8 +154,8 @@ extern int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie
 
 //Fonctions de l'IA
 extern int arrAcc(int plt[][8],int x, int y);
-extern float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,Joueur * jN);
-extern int listActions(Possibillite actionlist[] , Square plateau[][8], Joueur * jN);
-extern int findBestAction(Possibillite *bestAction , Square plateau[][8],Joueur * jN);
+extern float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,JoueurIA * jN);
+extern int listActions(Possibillite actionlist[] , Square plateau[][8], JoueurIA * jN);
+extern int findBestAction(Possibillite *bestAction , Square plateau[][8],JoueurIA * jN);
 extern void deplacement(Possibillite dpl, Square plat[][8],int color);
 extern void affPlt(int plt[][8]);
