@@ -103,7 +103,7 @@ extern void reset_OK_moves(Square square[][8]);
 extern int move_pawn_to(SDL_Rect clickedSquare,Square square[][8]);
 extern void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour);
 extern void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia, Game *game);
-extern void getWinner(SDL_Renderer *renderer, Square square[][8], Game * game);
+extern int getWinner(SDL_Renderer *renderer, Square square[][8], Game * game);
 
 //Fonctions gérant l'affichage en jeu
 extern void render_background(SDL_Renderer *renderer);

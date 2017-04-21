@@ -197,10 +197,10 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                     render_background(renderer);
                     render_base(renderer);
                     render_squares(renderer);
-                    if(move_pawn_to(clickedSquare, square)==1)
+                    if(move_pawn_to(clickedSquare, square) == 1)
                     {
                         printf("###########################################\nTour : %d\n", partie->tour);
-                            partie->tour = partie->tour + 1;
+                        partie->tour = partie->tour + 1;
                         if(ia == 1)
                         {
                             // INIT de l'IA
@@ -218,8 +218,10 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                             deplacement(bestAction, square, _NOIR);
                             partie->tour = partie->tour + 1;
                         }
-                        for(int c = 0; c<8 ; c++){
-                            for(int l = 0; l<8 ; l++){
+                        for(int c = 0; c < 8 ; c++)
+                        {
+                            for(int l = 0; l < 8 ; l++)
+                            {
                                 partie->plateau[c][l] = square[c][l].pawn;
                             }
                         }
@@ -229,7 +231,10 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                     get_authorized_moves(clickedSquare, square, partie->tour);
                     render_authorized_moves(clickedSquare, renderer, square);
                     render_pawns(renderer, square);
-                    getWinner(renderer, square , partie);
+                    if(getWinner(renderer, square, partie)!=0)
+                    {
+                        stop=1;
+                    }
                 }
             }
             break;
@@ -239,43 +244,76 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
     }
 }
 
-void getWinner(SDL_Renderer *renderer, Square square[][8], Game * game)
+int getWinner(SDL_Renderer *renderer, Square square[][8], Game * game)
 {
 //    int move_counter=0;
+int winner=0;
     for(int i = 0; i <= 7; i++)
     {
         if(square[i][7].pawn == _NOIR)
         {
             render_victory_screen(renderer, _NOIR);
+            wait_for_click_on_button(renderer);
             game->winner = _NOIR;
+            winner=_NOIR;
         }
         if(square[i][0].pawn == _BLANC)
         {
             render_victory_screen(renderer, _BLANC);
+            wait_for_click_on_button(renderer);
             game->winner = _BLANC;
+            winner=_BLANC;
         }
     }
 //On vérifie qu'un jouer n'est pas bloqué, si c'est le cas, l'autre joueur l'emporte.
-/*    for(int i = 0; i <= 7; i++)
-    {
-        for(int j = 0; j <= 7; j++)
+    /*    for(int i = 0; i <= 7; i++)
         {
-          if(square[i][j].isMoveOk==1)
-          {
-            move_counter++;
-          }
+            for(int j = 0; j <= 7; j++)
+            {
+              if(square[i][j].isMoveOk==1)
+              {
+                move_counter++;
+              }
+            }
+        }
+        if(move_counter==0)
+        {
+            if(tour%2==1)
+            {
+              render_victory_screen(renderer, _BLANC);
+            }
+            else if(tour%2==0)
+            {
+                render_victory_screen(renderer, _NOIR);
+            }
+        }*/
+    return winner;
+}
+
+void wait_for_click_on_button(SDL_Renderer *renderer)
+{
+    int stop = 0;
+    int cursor_x, cursor_y;
+    SDL_Event event;
+    while(!stop)
+    {
+        SDL_WaitEvent(&event);
+        switch(event.type)
+        {
+        case SDL_MOUSEBUTTONDOWN:
+            SDL_GetMouseState(&cursor_x, &cursor_y);
+            if((cursor_x > (WINDOW_WIDTH - BUTTON_WIDTH) / 2)
+                    && (cursor_x < (WINDOW_WIDTH - BUTTON_WIDTH) / 2 + BUTTON_WIDTH + 100)
+                    && (cursor_y > WINDOW_HEIGHT / 1.5)
+                    && (cursor_y < WINDOW_HEIGHT / 1.5 + BUTTON_HEIGHT))
+            {
+                stop = 1;
+            }
+            break;
+        case SDL_QUIT:
+            stop=1;
+            break;
         }
     }
-    if(move_counter==0)
-    {
-        if(tour%2==1)
-        {
-          render_victory_screen(renderer, _BLANC);
-        }
-        else if(tour%2==0)
-        {
-            render_victory_screen(renderer, _NOIR);
-        }
-    }*/
 }
 

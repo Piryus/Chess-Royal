@@ -124,14 +124,14 @@ void render_background(SDL_Renderer *renderer)
 void render_victory_screen(SDL_Renderer *renderer, int color)
 {
     SDL_Rect background = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    SDL_Texture *victory_msg = NULL;
+    char *victory_msg = NULL;
     SDL_Rect font_rect;
     TTF_Font *font_code_light = NULL;
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
     SDL_RenderFillRect(renderer, &background);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-    font_code_light = TTF_OpenFont("ttf/CODE_Light.ttf", 100);
+    font_code_light = TTF_OpenFont("ttf/CODE_Light.ttf", 80);
     if(color == _NOIR)
     {
         victory_msg = loadFont_Blended(renderer, font_code_light, "Le joueur Noir remporte la partie !", 255, 255, 255);
@@ -144,26 +144,7 @@ void render_victory_screen(SDL_Renderer *renderer, int color)
     RendTex(victory_msg, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
     SDL_Texture *button_text = NULL;
     TTF_Font *font_OpenSans = NULL;
-    SDL_Rect button = {0, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
-    SDL_Rect button_outline = {0, 0, 0, 0};
-    SDL_SetRenderDrawColor(renderer, 52, 152, 219, 255);//Couleur du bouton (intérieur)
-    int outline = 1;
-    button.x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2;
-    button.y = WINDOW_HEIGHT / 1.5;
-    SDL_RenderFillRect(renderer, &button);
-    SDL_SetRenderDrawColor(renderer, 41, 128, 185, 255);//Couleur du bouton (contour)
-    while(outline < BUTTON_OUTLINE)
-    {
-        button_outline.w = BUTTON_WIDTH + 2 * outline;
-        button_outline.h = BUTTON_HEIGHT + 2 * outline;
-        button_outline.x = (WINDOW_WIDTH - BUTTON_WIDTH) / 2 - outline;
-        button_outline.y = WINDOW_HEIGHT / 1.5 - outline;
-        SDL_RenderDrawRect(renderer, &button_outline);
-        outline++;
-    }
-    font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 30);
-    button_text = loadFont_Blended(renderer, font_OpenSans, "Retour au menu principal", 236, 240, 241);
-    SDL_QueryTexture(button_text, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(button_text, renderer, (WINDOW_WIDTH - font_rect.w) / 2, WINDOW_HEIGHT / 1.5 + (BUTTON_HEIGHT - font_rect.h) / 2);
+    SDL_Rect button = {(WINDOW_WIDTH - BUTTON_WIDTH) / 2, WINDOW_HEIGHT / 1.5, BUTTON_WIDTH+100, BUTTON_HEIGHT};
+    render_button(renderer, "Retour au menu principal", button);
     SDL_RenderPresent(renderer);
 }
