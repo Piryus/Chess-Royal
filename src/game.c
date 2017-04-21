@@ -200,7 +200,7 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                     render_squares(renderer);
                     if(move_pawn_to(clickedSquare, square) == 1)
                     {
-                        printf("###########################################\nTour : %d\n", partie->tour);
+                        printf("<><><><><><><><><><><><><><><><>\nTour : %d\n", partie->tour);
                         partie->tour = partie->tour + 1;
                         if(ia == 1)
                         {
@@ -219,13 +219,21 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                             deplacement(bestAction, square, _NOIR);
                             partie->tour = partie->tour + 1;
                         }
+
+                        int nbB = 0;
+                        int nbN = 0;
                         for(int c = 0; c < 8 ; c++)
                         {
                             for(int l = 0; l < 8 ; l++)
                             {
+                                if(square[c][l].pawn == _BLANC){nbB++;}
+                                if(square[c][l].pawn == _NOIR){nbN++;}
                                 partie->plateau[c][l] = square[c][l].pawn;
                             }
                         }
+                        partie->scoreB = 16-nbN;
+                        partie->scoreN = 16-nbB;
+                        printf("SCORES:    Blanc %2d  - Noir %2d", partie->scoreB , partie->scoreN );
                         Save( partie );
                     }
                     reset_OK_moves(square);
@@ -233,6 +241,7 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                     render_authorized_moves(clickedSquare, renderer, square);
                     render_pawns(renderer, square);
                     render_turn(renderer,partie);
+
                     if(getWinner(renderer, square, partie) != 0)
                     {
                         stop = 1;

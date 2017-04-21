@@ -26,7 +26,7 @@ void Save( Game * partie ){  //OK
     printf("----------------  SAVE  -----------------\n");
     FILE *fic;
     int size = saveSize();
-    printf("    Size : %d \n",size);
+   // printf("    Size : %d \n",size);
     //on charge tout dans un meme tableau
     fic = fopen("PartiesListe.dat","r");
     Game lPart[size];
@@ -40,7 +40,7 @@ void Save( Game * partie ){  //OK
     while(lPart[i].id != partie->id){
         i++;
     }
-    printf(" id %d = id %d >OK\n",lPart[i].id ,partie->id);
+    //printf(" id %d = id %d >OK\n",lPart[i].id ,partie->id);
     //on modifie la partie apropriée
     lPart[i].ia = partie->ia;
     lPart[i].id = partie->id;
@@ -55,12 +55,12 @@ void Save( Game * partie ){  //OK
     }
     //on réécrit tout dans le fichier
     fic = fopen("PartiesListe.dat","w+");
-    printf("rewrite all \n");
+   // printf("rewrite all \n");
     for(int a = 0; a<size ; a++){
         fwrite(&lPart[a], sizeof(Game), 1, fic);
     }
     fclose(fic);
-    printf("--------------  END SAVE  ---------------\n");
+   // printf("--------------  END SAVE  ---------------\n");
 }
 //***************************************************************************************************************
 void nouvellePartie(int ia, Game * partie){// OK
