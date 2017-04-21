@@ -94,7 +94,7 @@ int move_pawn_to(SDL_Rect clickedSquare, Square square[][8])
                 {
                     for(int l = 0; l <= 7; l++)
                     {
-                        if((square[k][l].isSelected == 1))
+                        if(square[k][l].isSelected == 1)
                         {
                             square[i][j].pawn = square[k][l].pawn;
                             square[k][l].pawn = 0;
@@ -191,6 +191,11 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
         case SDL_MOUSEBUTTONDOWN:// Bouton souris
             if(event.button.button == SDL_BUTTON_LEFT)// Bouton souris gauche
             {
+                if((partie->tour)%2 == 0){
+                    if(isblocked(_NOIR,partie,renderer)){stop = 1;}
+                }else{
+                    if(isblocked(_BLANC,partie,renderer)){stop = 1;}
+                }
                 clickedSquare = get_clicked_square(event.button.x, event.button.y);
                 if((clickedSquare.x != 0) && (clickedSquare.y != 0))
                 {
@@ -215,7 +220,8 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                             jN.gamma[6] = 53 ;
                             //Fonctions d'action de l'ia
                             Possibillite bestAction;
-                            findBestAction(&bestAction, square, &jN);
+                            if(isblocked(_NOIR,partie,renderer)){stop = 1;}
+                            if(findBestAction(&bestAction, square, &jN)){stop = 1;}// plus d'action possible pour l'IA
                             deplacement(bestAction, square, _NOIR);
                             partie->tour = partie->tour + 1;
                         }
@@ -233,7 +239,13 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                         }
                         partie->scoreB = 16-nbN;
                         partie->scoreN = 16-nbB;
-                        printf("SCORES:    Blanc %2d  - Noir %2d", partie->scoreB , partie->scoreN );
+                        printf("SCORES:    Blanc %2d  - Noir %2d\n", partie->scoreB , partie->scoreN );
+                        if((partie->tour)%2 == 0){
+                            if(isblocked(_NOIR,partie,renderer)){stop = 1;}
+                        }else{
+                            if(isblocked(_BLANC,partie,renderer)){stop = 1;}
+                        }
+
                         Save( partie );
                     }
                     reset_OK_moves(square);
@@ -253,6 +265,71 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
             break;
         }
     }
+}
+
+int isblocked(int color, Game *game, SDL_Renderer *renderer){
+    int blocked = 1;
+    if(color == _NOIR){
+        for(int c = 0 ; c <8 ; c++){
+            for(int l = 0 ; l <8 ; l++){
+                if(game->plateau[c][l] == _NOIR){
+                    if(l+1<8)if(game->plateau[c][l+1] == _VIDE){
+                        blocked = 0;
+                    }
+                    if((c-1>=0)&(l+1<8))if(game->plateau[c-1][l+1] == _BLANC){
+                        blocked = 0;
+                    }
+                    if((c+1<8)&(l+1<8))if(game->plateau[c+1][l+1] == _BLANC){
+                        blocked = 0;
+                    }
+                }
+            }
+            if((game->plateau[c][0] == _NOIR)&(game->plateau[c][2] == _VIDE)){
+                blocked = 0;
+            }
+            if((game->plateau[c][1] == _NOIR)&(game->plateau[c][3] == _VIDE)){
+                blocked = 0;
+            }
+        }
+    }else{
+        for(int c = 0 ; c <8 ; c++){
+            for(int l = 0 ; l <8 ; l++){
+                if(game->plateau[c][l] == _BLANC){
+                    if(l-1>=0)if(game->plateau[c][l-1] == _VIDE){
+                        blocked = 0;
+                    }
+                    if((c-1>=0)&(l-1>=0))if(game->plateau[c-1][l-1] == _NOIR){
+                        blocked = 0;
+                    }
+                    if((c+1<8)&(l-1>=0))if(game->plateau[c+1][l-1] == _NOIR){
+                        blocked = 0;
+                    }
+                }
+            }
+            if((game->plateau[c][6] == _BLANC)&(game->plateau[c][4] == _VIDE)){
+                blocked = 0;
+            }
+            if((game->plateau[c][7] == _BLANC)&(game->plateau[c][5] == _VIDE)){
+                blocked = 0;
+            }
+        }
+    }
+    printf("(color : %d)Blocked : %d\n",color,blocked);
+
+    if(blocked == 1){
+        if(game->scoreB>game->scoreN){
+            render_victory_screen(renderer, _BLANC);
+            wait_for_click_on_button(renderer);
+        }else{
+            if(game->scoreB<game->scoreN){
+                render_victory_screen(renderer, _NOIR);
+            wait_for_click_on_button(renderer);
+            }else{
+            /// Egalité !
+            }
+        }
+    }
+    return blocked;
 }
 
 int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game)

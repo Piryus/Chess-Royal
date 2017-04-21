@@ -104,6 +104,7 @@ extern int move_pawn_to(SDL_Rect clickedSquare,Square square[][8]);
 extern void get_authorized_moves(SDL_Rect rect,Square square[][8], int tour);
 extern void wait_for_event(SDL_Renderer *renderer,Square square[][8],int ia, Game *game);
 extern int getWinner(SDL_Renderer *renderer, Square square[][8], Game * game);
+extern int isblocked(int color, Game *game, SDL_Renderer *renderer);
 
 //Fonctions gérant l'affichage en jeu
 extern void render_background(SDL_Renderer *renderer);
@@ -138,7 +139,7 @@ extern int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie
 //Fonctions de l'IA
 extern int arrAcc(int plt[][8],int x, int y);
 extern float poids(int color,Square plt[][8],int frmX,int frmY,int toX,int toY,Joueur * jN);
-extern void listActions(Possibillite actionlist[] , Square plateau[][8], Joueur * jN);
+extern int listActions(Possibillite actionlist[] , Square plateau[][8], Joueur * jN);
 extern int findBestAction(Possibillite *bestAction , Square plateau[][8],Joueur * jN);
 extern void deplacement(Possibillite dpl, Square plat[][8],int color);
 extern void affPlt(int plt[][8]);
