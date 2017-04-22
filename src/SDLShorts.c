@@ -103,3 +103,16 @@ void render_button(SDL_Renderer *renderer, char text[], SDL_Rect button)
     RendTex(button_text, renderer, button.x + (button.w-font_rect.w) / 2, button.y + (button.h-font_rect.h) / 2);
     SDL_RenderPresent(renderer);
 }
+
+int isCursorOnButton(SDL_Renderer *renderer, int cursorX, int cursorY, SDL_Rect button)
+{
+    int isInside=0;
+    if((cursorX>button.x)
+                        &&(cursorX<button.x+button.w)
+                     &&(cursorY>button.y)
+                     &&(cursorY<button.y+button.h))
+    {
+        isInside=1;
+    }
+    return isInside;
+}

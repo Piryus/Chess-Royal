@@ -126,7 +126,7 @@ int nbJoueur(){
     return size;
 }
 
-int listerJoueur(Joueur joueurs[]){ // OK ; écrit la liste des partie dans le tableau que l'on lui donne et retourne 1  en cas d'erreur
+int listerJoueur(Joueur joueurs[]){ // OK ; écrit la liste des joueurs dans le tableau que l'on lui donne et retourne 1  en cas d'erreur
     FILE *fic;
     fic = fopen("JoueurListe.dat","r");
     if(fic != NULL){

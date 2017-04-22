@@ -50,7 +50,7 @@ We define our chess as below :
 6 |_|_|_|_|_|_|_|_|
 7 |_|_|_|_|_|_|_|_|
 
-Example : X = square[2][5]
+X = square[2][5]
 */
 
 

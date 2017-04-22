@@ -143,14 +143,16 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
             {
             case 0://==================================    IA
                 SDL_RenderClear(renderer);
-                nouvellePartie(IA, partie);
+                select_players(renderer, IA,partie);
+                nouvellePartie(IA, partie,1,1);
                 initialize_pawns_pos(square);
                 game(renderer, square, IA, partie);
                 quit = -1;
                 break;
             case 1: //==================================    Non IA
                 SDL_RenderClear(renderer);
-                nouvellePartie(NO_IA, partie);
+                select_players(renderer, NO_IA,partie);
+                nouvellePartie(NO_IA, partie,1,1);
                 initialize_pawns_pos(square);
                 game(renderer, square, NO_IA, partie);
                 quit = -1;
