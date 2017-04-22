@@ -1,23 +1,25 @@
 #include "defs.h"
 
 /*
-Fichier tableau de score
-Fichier parties en cours
+Deux fichiers :
+    Fichier de joueurs : JoueurListe.dat
+    Fichier parties en cours : PartiesListe.dat
 
 Menu principal:
-    Afficher scores
+    Séléctionner les joueurs
+    Afficher scores des joueurs
     Charger partie
     Nouvelle partie - IA ou Local
     Quitter
 
 en jeu:
     Fonctions d'affichages
-    Initialisation
+    Fonctions d'Initialisation
+    Fonctions de manipulation des fichier
     Fonction tour suivant
-    Deplacer un pion -> Maj
-    Selectionner un pion
-    Prochain tour d'IA
-    Fonction fin de partie et enregistrement du score
+    Selectionner & Deplacer un pion
+    Calcul du tour de l'IA
+    Fonctions fin de partie ( retour menu , enregistrement des score , etc)
     *MaJ d'un fichier à chaque coup : positions + données de jeu
 
 */
@@ -260,6 +262,51 @@ int listerParties(Game parties[]){ // OK ; écrit la liste des partie dans le tab
         printf("Pas de parties sauvegardée");
         return 1;
     }
+}
+
+void supprimerPartie(int id){
+printf("----------------  SUPP  -----------------\n");
+
+    FILE *fic;
+    int size = saveSize();
+   // printf("    Size : %d \n",size);
+    //on charge tout dans un meme tableau
+    fic = fopen("PartiesListe.dat","r");
+    Game lPart[size];
+    for(int a = 0; a<size ; a++){
+        fread(&lPart[a], sizeof(Game), 1, fic);
+        printf("fread %d : [id:%d]  \n",a,lPart[a].id);
+    }
+    fclose(fic);
+    //on cherche la partie apropriée
+    int i = 0;
+    while(lPart[i].id != id){
+        i++;
+    }
+    //printf(" id %d = id %d >OK\n",lPart[i].id ,partie->id);
+    //ondécale toutes les parties qui suivent
+    while(i<size){
+        lPart[i].ia = lPart[i+1].ia;
+        lPart[i].id = lPart[i+1].id;
+        lPart[i].winner = lPart[i+1].winner;
+        lPart[i].scoreB = lPart[i+1].scoreB;
+        lPart[i].scoreN = lPart[i+1].scoreN;
+        lPart[i].tour = lPart[i+1].tour;
+        for(int c = 0; c<8 ; c++){
+            for(int l = 0; l<8 ; l++){
+                lPart[i].plateau[c][l] = lPart[i+1].plateau[c][l];
+            }
+        }
+    }
+    size--;
+    //on réécrit tout dans le fichier
+    fic = fopen("PartiesListe.dat","w+");
+   // printf("rewrite all \n");
+    for(int a = 0; a<size ; a++){
+        fwrite(&lPart[a], sizeof(Game), 1, fic);
+    }
+    fclose(fic);
+   // printf("--------------  END SAVE  ---------------\n");
 }
 //***************************************************************************************************************
 int saveSize(){

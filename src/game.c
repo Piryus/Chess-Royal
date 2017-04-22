@@ -318,6 +318,7 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
 
     if(blocked == 1){
         if(game->scoreB>game->scoreN){
+            supprimerPartie(game->id);
             Joueur jB;
             Joueur jN;
             chargerJoueur(game->joueurB, &jB);
@@ -330,6 +331,7 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
             wait_for_click_on_button(renderer);
         }else{
             if(game->scoreB<game->scoreN){
+                supprimerPartie(game->id);
                 Joueur jB;
                 Joueur jN;
                 chargerJoueur(game->joueurB, &jB);
@@ -342,6 +344,7 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
                 wait_for_click_on_button(renderer);
             }else{
             /// Egalité !
+                supprimerPartie(game->id);
                 Joueur jB;
                 Joueur jN;
                 chargerJoueur(game->joueurB, &jB);
@@ -364,6 +367,7 @@ int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game)
     {
         if(square[i][7].pawn == _NOIR)
         {
+            supprimerPartie(game->id);
             Joueur jB;
             Joueur jN;
             chargerJoueur(game->joueurB, &jB);
@@ -381,6 +385,7 @@ int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game)
         }
         if(square[i][0].pawn == _BLANC)
         {
+            supprimerPartie(game->id);
             Joueur jB;
             Joueur jN;
             chargerJoueur(game->joueurB, &jB);

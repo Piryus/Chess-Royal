@@ -126,6 +126,7 @@ extern void render_authorized_moves(SDL_Rect clickedSquare, SDL_Renderer *render
 extern void render_victory_screen(SDL_Renderer *renderer, int color);
 
 //fonction gérant le fichier de sauvegarde
+extern void supprimerPartie(int id);
 extern void Save( Game * game );
 extern void nouvellePartie(int ia, Game * partie ,int idJB,int idJN);
 extern void chargerPartie(int id, Game * game);
