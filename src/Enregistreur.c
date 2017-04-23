@@ -75,7 +75,7 @@ void chargerJoueur(int id, Joueur * joueur){
 }
 
 void SaveJoueur( Joueur * joueur ){
-    printf("----------------  SAVE  -----------------\n");
+    printf("----------------  SAVE J -----------------\n");
     FILE *fic;
     int size = saveSize();
    // printf("    Size : %d \n",size);
@@ -108,6 +108,25 @@ void SaveJoueur( Joueur * joueur ){
     }
     fclose(fic);
    // printf("--------------  END SAVE  ---------------\n");
+}
+
+void modifJoueur(int ia, int winner , int njN, int njB){
+    Joueur jB;
+    chargerJoueur(njB, &jB);
+    //chargerJoueur(1, &jB);
+    if(winner == _BLANC){jB.nbWin++;jB.nbGame++;}
+    if(winner == _NOIR){jB.nbLose++;jB.nbGame++;}
+    if(winner == _VIDE){jB.nbEgal++;jB.nbGame++;}
+    SaveJoueur( &jB );
+    if(ia == 0){
+        Joueur jN;
+        chargerJoueur(njN, &jN);
+        //chargerJoueur(2, &jN);
+        if(winner == _BLANC){jN.nbWin++;jN.nbGame++;}
+        if(winner == _NOIR){jN.nbLose++;jN.nbGame++;}
+        if(winner == _VIDE){jN.nbEgal++;jN.nbGame++;}
+        SaveJoueur( &jN );
+    }
 }
 
 int nbJoueur(){

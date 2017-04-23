@@ -199,4 +199,3 @@ void deplacement(Possibillite dpl, Square plat[][8],int color){
     plat[dpl.aX][dpl.aY].pawn = color;
 }
 
-

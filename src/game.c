@@ -316,114 +316,50 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
     }
     printf("(color : %d)Blocked : %d\n",color,blocked);
 
-    if(blocked == 1){
+     if(blocked == 1){
         if(game->scoreB>game->scoreN){
-            supprimerPartie(game->id);
-            Joueur jB;
-            Joueur jN;
-            chargerJoueur(game->joueurB, &jB);
-            chargerJoueur(game->joueurN, &jN);
-            jB.nbWin++;jB.nbGame++;
-            jN.nbLose++;jN.nbGame++;
-            SaveJoueur( &jB );
-            SaveJoueur( &jN );
+            modifJoueur(game->ia, _BLANC ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _BLANC);
             wait_for_click_on_button(renderer);
+            supprimerPartie(game->id);
         }else{
             if(game->scoreB<game->scoreN){
-                supprimerPartie(game->id);
-                Joueur jB;
-                Joueur jN;
-                chargerJoueur(game->joueurB, &jB);
-                chargerJoueur(game->joueurN, &jN);
-                jB.nbLose++;jB.nbGame++;
-                jN.nbWin++;jN.nbGame++;
-                SaveJoueur( &jB );
-                SaveJoueur( &jN );
+                modifJoueur(game->ia, _NOIR ,game->joueurN,game->joueurB);
                 render_victory_screen(renderer, _NOIR);
                 wait_for_click_on_button(renderer);
+                supprimerPartie(game->id);
             }else{
             /// Egalité !
+                modifJoueur(game->ia, _VIDE ,game->joueurN,game->joueurB);
+                ///mettre un renderer ici
                 supprimerPartie(game->id);
-                Joueur jB;
-                Joueur jN;
-                chargerJoueur(game->joueurB, &jB);
-                chargerJoueur(game->joueurN, &jN);
-                jB.nbEgal++;jB.nbGame++;
-                jN.nbEgal++;jN.nbGame++;
-                SaveJoueur( &jB );
-                SaveJoueur( &jN );
             }
         }
     }
     return blocked;
 }
 
-int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game)
-{
+int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game){
 //    int move_counter=0;
     int winner = 0;
-    for(int i = 0; i <= 7; i++)
-    {
-        if(square[i][7].pawn == _NOIR)
-        {
-            supprimerPartie(game->id);
-            Joueur jB;
-            Joueur jN;
-            chargerJoueur(game->joueurB, &jB);
-            chargerJoueur(game->joueurN, &jN);
-            jB.nbLose++;jB.nbGame++;
-            jN.nbWin++;jN.nbGame++;
-            SaveJoueur( &jB );
-            SaveJoueur( &jN );
-            render_victory_screen(renderer, _BLANC);
-            wait_for_click_on_button(renderer);
+    for(int i = 0; i <= 7; i++){
+        if(square[i][7].pawn == _NOIR){
+            modifJoueur(game->ia, _NOIR ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _NOIR);
             wait_for_click_on_button(renderer);
             game->winner = _NOIR;
             winner = _NOIR;
-        }
-        if(square[i][0].pawn == _BLANC)
-        {
             supprimerPartie(game->id);
-            Joueur jB;
-            Joueur jN;
-            chargerJoueur(game->joueurB, &jB);
-            chargerJoueur(game->joueurN, &jN);
-            jB.nbWin++;jB.nbGame++;
-            jN.nbLose++;jN.nbGame++;
-            SaveJoueur( &jB );
-            SaveJoueur( &jN );
-            render_victory_screen(renderer, _BLANC);
-            wait_for_click_on_button(renderer);
+        }
+        if(square[i][0].pawn == _BLANC){
+            modifJoueur(game->ia, _BLANC ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _BLANC);
             wait_for_click_on_button(renderer);
             game->winner = _BLANC;
             winner = _BLANC;
+            supprimerPartie(game->id);
         }
     }
-//On vérifie qu'un jouer n'est pas bloqué, si c'est le cas, l'autre joueur l'emporte.
-    /*    for(int i = 0; i <= 7; i++)
-        {
-            for(int j = 0; j <= 7; j++)
-            {
-              if(square[i][j].isMoveOk==1)
-              {
-                move_counter++;
-              }
-            }
-        }
-        if(move_counter==0)
-        {
-            if(tour%2==1)
-            {
-              render_victory_screen(renderer, _BLANC);
-            }
-            else if(tour%2==0)
-            {
-                render_victory_screen(renderer, _NOIR);
-            }
-        }*/
     return winner;
 }
 
