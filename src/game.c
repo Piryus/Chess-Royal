@@ -329,9 +329,8 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
                 wait_for_click_on_button(renderer);
                 supprimerPartie(game->id);
             }else{
-            /// Egalité !
                 modifJoueur(game->ia, _VIDE ,game->joueurN,game->joueurB);
-                ///mettre un renderer ici
+                render_victory_screen(renderer, _VIDE);
                 supprimerPartie(game->id);
             }
         }

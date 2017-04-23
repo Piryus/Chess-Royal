@@ -140,6 +140,10 @@ void render_victory_screen(SDL_Renderer *renderer, int color)
     {
         victory_msg = loadFont_Blended(renderer, font_code_light, "Le joueur Blanc remporte la partie !", 255, 255, 255);
     }
+    else if(color == _VIDE)
+    {
+        victory_msg = loadFont_Blended(renderer, font_code_light, "Egalité !", 255, 255, 255);
+    }
     SDL_QueryTexture(victory_msg, NULL, NULL, &font_rect.w, &font_rect.h);
     RendTex(victory_msg, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
     SDL_Texture *button_text = NULL;
