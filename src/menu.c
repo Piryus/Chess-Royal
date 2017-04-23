@@ -128,6 +128,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
 {
     int quit = 0;
     int choice = 1;
+    int IDPlayerB=-1, IDPlayerW;
     int cursor_x, cursor_y;
     SDL_GetMouseState(&cursor_x, &cursor_y);
     Game partiesList[saveSize()];
@@ -142,12 +143,11 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
             {
             case 0://==================================    IA
                 SDL_RenderClear(renderer);
-                select_players_menu(renderer, IA,partie,&quit);
-                printf("quit:%d",quit);
+                select_players_menu(renderer, IA,partie,&quit,&IDPlayerB,&IDPlayerW);
                 if(quit!=-1)
                 {
-                    SDL_RenderClear(renderer);
-                    nouvellePartie(IA, partie,1,1);
+                    printf("IDs :%d %d\n",IDPlayerW,IDPlayerB);
+                    nouvellePartie(IA, partie,IDPlayerW,-1);
                     initialize_pawns_pos(square);
                     game(renderer, square, IA, partie);
                 }
@@ -155,10 +155,11 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                 break;
             case 1: //==================================    Non IA
                 SDL_RenderClear(renderer);
-                select_players_menu(renderer, NO_IA,partie,&quit);
+                select_players_menu(renderer, NO_IA,partie,&quit,&IDPlayerB,&IDPlayerW);
                 if(quit!=-1)
                 {
-                    nouvellePartie(NO_IA, partie,1,1);
+                    printf("IDs :%d %d\n",IDPlayerW,IDPlayerB);
+                    nouvellePartie(NO_IA, partie,IDPlayerW,IDPlayerB);
                     initialize_pawns_pos(square);
                     game(renderer, square, NO_IA, partie);
                 }

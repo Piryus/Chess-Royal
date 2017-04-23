@@ -1,6 +1,6 @@
 #include "defs.h"
 
-void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int *quit)
+void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int *quit, int *IDPlayerB, int *IDPlayerW)
 {
     Square square[8][8];
     SDL_Event event;
@@ -48,7 +48,7 @@ void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int
                     playerButton.y = 300 + (BUTTON_HEIGHT + 15) * i;
                     if(isCursorOnButton(renderer,playerButton))
                     {
-                        selectPlayer(i,selectedPlayerNb,partie);
+                        selectPlayer(i,selectedPlayerNb,IDPlayerB,IDPlayerW);
                         selectedPlayerNb++;
                         stop=1;
                     }
@@ -126,14 +126,14 @@ void render_newPlayerMenu(SDL_Renderer *renderer)
     SDL_StopTextInput();
 }
 
-void selectPlayer(int ID, int selectedPlayerNb, Game *partie)
+void selectPlayer(int ID, int selectedPlayerNb, int *IDPlayerB, int *IDPlayerW)
 {
     if(selectedPlayerNb==0)
     {
-        partie->joueurB=ID;
+        *IDPlayerW=ID;
     }
     if(selectedPlayerNb==1)
     {
-        partie->joueurN=ID;
+        *IDPlayerB=ID;
     }
 }

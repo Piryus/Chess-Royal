@@ -137,6 +137,7 @@ extern void chargerJoueur(int id, Joueur * joueur);
 extern void SaveJoueur( Joueur * joueur );
 extern int nbJoueur();
 extern int listerJoueur(Joueur joueurs[]);
+extern void modifJoueur(int ia, int winner , int njN, int njB);
 
 //Fonctions "raccourcis" SDL
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
