@@ -134,6 +134,17 @@ void renderTextInRect(SDL_Renderer *renderer, char text[], SDL_Rect rect)
     SDL_Rect font_rect;
     TextTexture = loadFont_Blended(renderer, font_OpenSans, text, 0, 0, 0);
     SDL_QueryTexture(TextTexture, NULL, NULL, &font_rect.w, &font_rect.h);
-    RendTex(TextTexture, renderer, (rect.x+font_rect.w)/2, (rect.y+font_rect.h)/2);
+    RendTex(TextTexture, renderer, rect.x+(rect.w-font_rect.w)/2, rect.y+(rect.h-font_rect.h)/2);
+    SDL_RenderPresent(renderer);
+}
+
+void renderCenteredText(SDL_Renderer *renderer, char text[], int x, int y, int r, int g, int b, int size)
+{
+    TTF_Font *font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
+    SDL_Texture *TextTexture;
+    SDL_Rect font_rect;
+    TextTexture = loadFont_Blended(renderer, font_OpenSans, text, r, g, b);
+    SDL_QueryTexture(TextTexture, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(TextTexture, renderer, x-font_rect.w/2, y-font_rect.h/2);
     SDL_RenderPresent(renderer);
 }

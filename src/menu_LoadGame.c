@@ -1,6 +1,6 @@
 #include "defs.h"
 
-int load_game_menu_and_get_choice(SDL_Renderer *renderer, Game partiesList[saveSize()])
+int load_game_menu_and_get_choice(SDL_Renderer *renderer, Game partiesList[])
 {
     Square square[8][8];
     int choice=-1;
@@ -71,7 +71,7 @@ void render_games_buttons(SDL_Renderer *renderer)
 }
 
 
-void render_games_infos(SDL_Renderer *renderer, Game partiesList[saveSize()])
+void render_games_infos(SDL_Renderer *renderer, Game partiesList[])
 {
     int size = saveSize();
     char ID[size][20];
@@ -86,7 +86,7 @@ void render_games_infos(SDL_Renderer *renderer, Game partiesList[saveSize()])
     for(int i = 0; i <= size; i++)
     {
         sprintf(ID[i], "%d", partiesList[i].id);
-        if(partiesList[i].id == 1)
+        if(partiesList[i].ia == 1)
         {
             strcpy(isIA[i], "Oui");
         }

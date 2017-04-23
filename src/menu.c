@@ -57,8 +57,8 @@ void render_menu_buttons(SDL_Renderer *renderer)
     render_button(renderer, "Jouer contre l'IA", menu_button[0]);
     render_button(renderer, "Jouer à deux", menu_button[1]);
     render_button(renderer, "Charger une partie", menu_button[2]);
-    //render_button(renderer, "Scores", menu_button[3]);
-    render_button(renderer, "Quitter le jeu", menu_button[3]);
+    render_button(renderer, "Scores", menu_button[3]);
+    render_button(renderer, "Quitter le jeu", menu_button[4]);
 }
 
 void render_menu_background(SDL_Renderer *renderer, Square square[][8])
@@ -142,19 +142,26 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
             {
             case 0://==================================    IA
                 SDL_RenderClear(renderer);
-                select_players(renderer, IA,partie);
-                SDL_RenderClear(renderer);
-                nouvellePartie(IA, partie,1,1);
-                initialize_pawns_pos(square);
-                game(renderer, square, IA, partie);
+                select_players_menu(renderer, IA,partie,&quit);
+                printf("quit:%d",quit);
+                if(quit!=-1)
+                {
+                    SDL_RenderClear(renderer);
+                    nouvellePartie(IA, partie,1,1);
+                    initialize_pawns_pos(square);
+                    game(renderer, square, IA, partie);
+                }
                 quit = -1;
                 break;
             case 1: //==================================    Non IA
                 SDL_RenderClear(renderer);
-                select_players(renderer, NO_IA,partie);
-                nouvellePartie(NO_IA, partie,1,1);
-                initialize_pawns_pos(square);
-                game(renderer, square, NO_IA, partie);
+                select_players_menu(renderer, NO_IA,partie,&quit);
+                if(quit!=-1)
+                {
+                    nouvellePartie(NO_IA, partie,1,1);
+                    initialize_pawns_pos(square);
+                    game(renderer, square, NO_IA, partie);
+                }
                 quit = -1;
                 break;
             case 2://==================================    Charger partie
@@ -182,8 +189,11 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                     quit = -1;
                 }
                 break;
+            case 3://Scores
+                scores_menu(renderer);
+                quit = -1;
                 break;
-            case 3://Quitter
+            case 4://Quitter
                 quit = 1;
                 break;
             default:

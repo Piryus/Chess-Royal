@@ -80,6 +80,9 @@
 		<Unit filename="src/render.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/scores_menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
