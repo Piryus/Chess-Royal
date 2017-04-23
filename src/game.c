@@ -23,7 +23,6 @@ SDL_Rect get_clicked_square(int x, int y)
     return clickedSquare;
 }
 
-//Fonction principal gérant le jeu
 void game(SDL_Renderer *renderer, Square square[][8], int ia, Game *partie)
 {
     SDL_RenderClear(renderer);
@@ -58,25 +57,25 @@ void initialize_pawns_pos(Square square[][8])
     }
 }
 
-//Fonction transposant le numéro d'une case en abscisses (de 0 à 8) en abscisse du coin supérieur gauche de cette case(x)
+
 int numcase_to_coord_x(int numcase)
 {
     return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
 }
 
-//Fonction transposant le numéro d'une case en abscisses (de 0 à 8) en coordonées du coin supérieur gauche de cette case(x)
+
 int numcase_to_coord_y(int numcase)
 {
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase;
 }
 
-//Fonction transposant le numéro d'une case en coordonées pour le pion (x)
+
 int posx(int numcase)
 {
     return (WINDOW_WIDTH - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
 }
 
-//Fonction transposant le numéro d'une case en coordonées pour le pion (y)
+
 int posy(int numcase)
 {
     return (WINDOW_HEIGHT - SQUARE_SIZE * CHESS_NB_SQUARE) / 2 + (SQUARE_SIZE + SPACING) * numcase + (SQUARE_SIZE - PAWN_SIZE) / 2;
@@ -320,13 +319,13 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
         if(game->scoreB>game->scoreN){
             modifJoueur(game->ia, _BLANC ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _BLANC);
-            wait_for_click_on_button(renderer);
+            wait_for_click_on_button();
             supprimerPartie(game->id);
         }else{
             if(game->scoreB<game->scoreN){
                 modifJoueur(game->ia, _NOIR ,game->joueurN,game->joueurB);
                 render_victory_screen(renderer, _NOIR);
-                wait_for_click_on_button(renderer);
+                wait_for_click_on_button();
                 supprimerPartie(game->id);
             }else{
                 modifJoueur(game->ia, _VIDE ,game->joueurN,game->joueurB);
@@ -344,14 +343,14 @@ int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game){
         if(square[i][7].pawn == _NOIR){
             modifJoueur(game->ia, _NOIR ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _NOIR);
-            wait_for_click_on_button(renderer);
+            wait_for_click_on_button();
             winner = _NOIR;
             supprimerPartie(game->id);
         }
         if(square[i][0].pawn == _BLANC){
             modifJoueur(game->ia, _BLANC ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _BLANC);
-            wait_for_click_on_button(renderer);
+            wait_for_click_on_button();
             winner = _BLANC;
             supprimerPartie(game->id);
         }
@@ -359,7 +358,7 @@ int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game){
     return winner;
 }
 
-void wait_for_click_on_button(SDL_Renderer *renderer)
+void wait_for_click_on_button(void)
 {
     int stop = 0;
     int cursor_x, cursor_y;

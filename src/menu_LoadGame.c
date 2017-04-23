@@ -48,7 +48,7 @@ int load_game_menu_and_get_choice(SDL_Renderer *renderer, Game partiesList[])
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            choice=get_choice(renderer,adder);
+            choice=get_choice(adder);
             if(choice!= -1)
             {
                 stop = 1;
@@ -105,7 +105,7 @@ void render_games_infos(SDL_Renderer *renderer, Game partiesList[], int adder)
     SDL_Rect font_rect;
     SDL_Texture *text;
     TTF_Font *font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 30);
-    SDL_Rect go_button = {(WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 6, NULL, 70, 70};
+    SDL_Rect go_button = {(WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 6, 0, 70, 70};
     for(int i = 0; i <= size; i++)
     {
         sprintf(ID[i], "%d", partiesList[i].id);
@@ -144,7 +144,7 @@ void render_games_infos(SDL_Renderer *renderer, Game partiesList[], int adder)
     SDL_RenderPresent(renderer);
 }
 
-int get_choice(SDL_Renderer *renderer, int adder)
+int get_choice(int adder)
 {
     int choice = -1;
     int cursor_x, cursor_y;

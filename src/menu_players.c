@@ -1,6 +1,6 @@
 #include "defs.h"
 
-void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int *quit, int *IDPlayerB, int *IDPlayerW)
+void select_players_menu(SDL_Renderer *renderer, int isAIGame, int *quit, int *IDPlayerB, int *IDPlayerW)
 {
     Square square[8][8];
     SDL_Event event;
@@ -35,12 +35,12 @@ void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int
             switch(event.type)
             {
             case SDL_MOUSEBUTTONDOWN:
-                if(isCursorOnButton(renderer, newPlayerButton))
+                if(isCursorOnButton(newPlayerButton))
                 {
                     render_newPlayerMenu(renderer);
                     stop=1;
                 }
-                else if(isCursorOnButton(renderer,goBackButton))
+                else if(isCursorOnButton(goBackButton))
                 {
                     stop=1;
                     *quit=-1;
@@ -48,7 +48,7 @@ void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int
                 for(int i=0; i<nbJoueur(); i++)
                 {
                     playerButton.y = 300 + (BUTTON_HEIGHT + 15) * i +adder;
-                    if(isCursorOnButton(renderer,playerButton))
+                    if(isCursorOnButton(playerButton))
                     {
                         selectPlayer(i,selectedPlayerNb,IDPlayerB,IDPlayerW);
                         selectedPlayerNb++;
@@ -121,7 +121,8 @@ void render_newPlayerMenu(SDL_Renderer *renderer)
     SDL_Event event;
     int stop = 0;
     Square square[8][8];
-    char name[15] = {NULL};
+    char name[15];
+    name[0]='\0';
     SDL_Rect cancelButton = {WINDOW_WIDTH / 2 - 500, 700, BUTTON_WIDTH, BUTTON_HEIGHT};
     SDL_Rect createPlayerButton = {WINDOW_WIDTH / 2 + (500 - BUTTON_WIDTH), 700, BUTTON_WIDTH, BUTTON_HEIGHT};
     SDL_Rect textArea = {WINDOW_WIDTH / 2 - 450, (WINDOW_HEIGHT - 100) / 2, 900, 100};
@@ -138,11 +139,11 @@ void render_newPlayerMenu(SDL_Renderer *renderer)
         {
         case SDL_MOUSEBUTTONDOWN:
             printf("%s", name);
-            if(isCursorOnButton(renderer, cancelButton))
+            if(isCursorOnButton(cancelButton))
             {
                 stop = 1;
             }
-            else if((isCursorOnButton(renderer, createPlayerButton))&&(strlen(name)>3))
+            else if((isCursorOnButton(createPlayerButton))&&(strlen(name)>3))
             {
                 nouveauJoueur(name);
                 stop = 1;

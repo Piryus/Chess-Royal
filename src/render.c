@@ -104,7 +104,7 @@ void render_button(SDL_Renderer *renderer, char text[], SDL_Rect button)
     SDL_RenderPresent(renderer);
 }
 
-int isCursorOnButton(SDL_Renderer *renderer, SDL_Rect button)
+int isCursorOnButton(SDL_Rect button)
 {
     int isInside=0;
     int cursorX, cursorY;
@@ -140,7 +140,7 @@ void renderTextInRect(SDL_Renderer *renderer, char text[], SDL_Rect rect)
 
 void renderCenteredText(SDL_Renderer *renderer, char text[], int x, int y, int r, int g, int b, int size)
 {
-    TTF_Font *font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
+    TTF_Font *font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", size);
     SDL_Texture *TextTexture;
     SDL_Rect font_rect;
     TextTexture = loadFont_Blended(renderer, font_OpenSans, text, r, g, b);

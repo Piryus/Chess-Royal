@@ -143,7 +143,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
             {
             case 0://==================================    IA
                 SDL_RenderClear(renderer);
-                select_players_menu(renderer, IA,partie,&quit,&IDPlayerB,&IDPlayerW);
+                select_players_menu(renderer, IA,&quit,&IDPlayerB,&IDPlayerW);
                 if(quit!=-1)
                 {
                     printf("IDs :%d %d\n",IDPlayerW,IDPlayerB);
@@ -155,7 +155,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
                 break;
             case 1: //==================================    Non IA
                 SDL_RenderClear(renderer);
-                select_players_menu(renderer, NO_IA,partie,&quit,&IDPlayerB,&IDPlayerW);
+                select_players_menu(renderer, NO_IA,&quit,&IDPlayerB,&IDPlayerW);
                 if(quit!=-1)
                 {
                     printf("IDs :%d %d\n",IDPlayerW,IDPlayerB);

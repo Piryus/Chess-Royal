@@ -20,7 +20,7 @@ void scores_menu(SDL_Renderer *renderer)
         switch(event.type)
         {
         case SDL_MOUSEBUTTONDOWN:
-            if(isCursorOnButton(renderer,goBackButton))
+            if(isCursorOnButton(goBackButton))
             {
                 stop=1;
             }

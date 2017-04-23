@@ -146,8 +146,6 @@ void render_victory_screen(SDL_Renderer *renderer, int color)
     }
     SDL_QueryTexture(victory_msg, NULL, NULL, &font_rect.w, &font_rect.h);
     RendTex(victory_msg, renderer, (WINDOW_WIDTH - font_rect.w) / 2, (WINDOW_HEIGHT - font_rect.h) / 2);
-    SDL_Texture *button_text = NULL;
-    TTF_Font *font_OpenSans = NULL;
     SDL_Rect button = {(WINDOW_WIDTH - BUTTON_WIDTH) / 2, WINDOW_HEIGHT / 1.5, BUTTON_WIDTH + 100, BUTTON_HEIGHT};
     render_button(renderer, "Retour au menu principal", button);
     SDL_RenderPresent(renderer);

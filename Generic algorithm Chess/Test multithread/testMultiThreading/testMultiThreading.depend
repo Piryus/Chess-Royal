@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1491429800 source:e:\louis\generic algorithm chess\test multithread\testmultithreading\main.c
-	<stdio.h>
-	<stdlib.h>
-	<pthread.h>
-	<windows.h>
-	<unistd.h>
-
