@@ -131,8 +131,8 @@ void modifJoueur(int ia, int winner , int njN, int njB){
     if(ia == 0){
         Joueur jN;
         chargerJoueur(njN, &jN);
-        if(winner == _BLANC){jN.nbWin++;jN.nbGame++;}
-        if(winner == _NOIR){jN.nbLose++;jN.nbGame++;}
+        if(winner == _NOIR){jN.nbWin++;jN.nbGame++;}
+        if(winner == _BLANC){jN.nbLose++;jN.nbGame++;}
         if(winner == _VIDE){jN.nbEgal++;jN.nbGame++;}
         SaveJoueur( &jN );
     }
