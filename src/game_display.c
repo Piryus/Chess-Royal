@@ -124,7 +124,7 @@ void render_background(SDL_Renderer *renderer)
 void render_victory_screen(SDL_Renderer *renderer, int color)
 {
     SDL_Rect background = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    char *victory_msg = NULL;
+    SDL_Texture *victory_msg = NULL;
     SDL_Rect font_rect;
     TTF_Font *font_code_light = NULL;
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);

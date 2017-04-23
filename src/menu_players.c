@@ -5,7 +5,7 @@ void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int
     Square square[8][8];
     SDL_Event event;
     int stop = 0;
-    int adder=10;
+    int adder=0;
     SDL_Rect newPlayerButton = {(WINDOW_WIDTH - BUTTON_WIDTH) / 2, 20, BUTTON_WIDTH, BUTTON_HEIGHT};
     SDL_Rect playerButton = {(WINDOW_WIDTH - BUTTON_WIDTH) / 2, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
     SDL_Rect goBackButton= {30,15,BUTTON_WIDTH-150,BUTTON_HEIGHT};
@@ -15,16 +15,18 @@ void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int
     {
         SDL_RenderClear(renderer);
         render_menu_background(renderer, square);
-        render_playersList(renderer);
+        render_playersList(renderer,adder);
+        newPlayerButton.y=20+adder;
+        goBackButton.y=15+adder;
         render_button(renderer, "Nouveau joueur", newPlayerButton);
         render_button(renderer,"Retour", goBackButton);
         if(selectedPlayerNb==0)
         {
-            renderCenteredText(renderer,"Sélectionnez le joueur blanc :", WINDOW_WIDTH/2, 200,255,255,255,60);
+            renderCenteredText(renderer,"Sélectionnez le joueur blanc :", WINDOW_WIDTH/2, 200+adder,255,255,255,60);
         }
         else if(selectedPlayerNb==1)
         {
-            renderCenteredText(renderer,"Sélectionnez le joueur noir :", WINDOW_WIDTH/2, 200,255,255,255,60);
+            renderCenteredText(renderer,"Sélectionnez le joueur noir :", WINDOW_WIDTH/2, 200+adder,255,255,255,60);
         }
         stop=0;
         while(!stop)
@@ -45,7 +47,7 @@ void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int
                 }
                 for(int i=0; i<nbJoueur(); i++)
                 {
-                    playerButton.y = 300 + (BUTTON_HEIGHT + 15) * i;
+                    playerButton.y = 300 + (BUTTON_HEIGHT + 15) * i +adder;
                     if(isCursorOnButton(renderer,playerButton))
                     {
                         selectPlayer(i,selectedPlayerNb,IDPlayerB,IDPlayerW);
@@ -54,19 +56,62 @@ void select_players_menu(SDL_Renderer *renderer, int isAIGame, Game *partie, int
                     }
                 }
                 break;
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym)
+                {
+                case SDLK_UP:
+                    if(adder<=-100)
+                    {
+                        adder=adder+100;
+                        SDL_RenderClear(renderer);
+                        render_menu_background(renderer, square);
+                        render_playersList(renderer,adder);
+                        newPlayerButton.y=20+adder;
+                        goBackButton.y=15+adder;
+                        render_button(renderer, "Nouveau joueur", newPlayerButton);
+                        render_button(renderer,"Retour", goBackButton);
+                        if(selectedPlayerNb==0)
+                        {
+                            renderCenteredText(renderer,"Sélectionnez le joueur blanc :", WINDOW_WIDTH/2, 200+adder,255,255,255,60);
+                        }
+                        else if(selectedPlayerNb==1)
+                        {
+                            renderCenteredText(renderer,"Sélectionnez le joueur noir :", WINDOW_WIDTH/2, 200+adder,255,255,255,60);
+                        }
+                    }
+                    break;
+                case SDLK_DOWN:
+                    adder=adder-100;
+                    SDL_RenderClear(renderer);
+                    render_menu_background(renderer, square);
+                    render_playersList(renderer,adder);
+                    newPlayerButton.y=20+adder;
+                    goBackButton.y=15+adder;
+                    render_button(renderer, "Nouveau joueur", newPlayerButton);
+                    render_button(renderer,"Retour", goBackButton);
+                    if(selectedPlayerNb==0)
+                    {
+                        renderCenteredText(renderer,"Sélectionnez le joueur blanc :", WINDOW_WIDTH/2, 200+adder,255,255,255,60);
+                    }
+                    else if(selectedPlayerNb==1)
+                    {
+                        renderCenteredText(renderer,"Sélectionnez le joueur noir :", WINDOW_WIDTH/2, 200+adder,255,255,255,60);
+                    }
+                    break;
+                }
             }
         }
     }
 }
 
-void render_playersList(SDL_Renderer *renderer)
+void render_playersList(SDL_Renderer *renderer, int adder)
 {
     SDL_Rect playerButton = {(WINDOW_WIDTH - BUTTON_WIDTH) / 2, 0, BUTTON_WIDTH, BUTTON_HEIGHT};
     Joueur players[nbJoueur()];
     listerJoueur(players);
     for(int i = 0; i < nbJoueur(); i++)
     {
-        playerButton.y = 300 + (BUTTON_HEIGHT + 15) * i;
+        playerButton.y = 300 + (BUTTON_HEIGHT + 15) * i +adder;
         render_button(renderer, players[i].Nom, playerButton);
     }
 }

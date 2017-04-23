@@ -5,13 +5,14 @@ int load_game_menu_and_get_choice(SDL_Renderer *renderer, Game partiesList[])
     Square square[8][8];
     int choice=-1;
     int stop = 0;
+    int adder=0;
     SDL_Event event;
     SDL_RenderClear(renderer);
     render_menu_background(renderer, square);
-    load_menu_header(renderer);
-    render_games_buttons(renderer);
-    render_games_infos(renderer, partiesList);
-    render_back_to_menu_button(renderer);
+    load_menu_header(renderer,adder);
+    render_games_buttons(renderer,adder);
+    render_games_infos(renderer, partiesList,adder);
+    render_back_to_menu_button(renderer,adder);
     while(!stop)
     {
         SDL_WaitEvent(&event);
@@ -23,9 +24,31 @@ int load_game_menu_and_get_choice(SDL_Renderer *renderer, Game partiesList[])
             case SDLK_ESCAPE:
                 stop = 1;
                 break;
+            case SDLK_DOWN:
+                adder=adder-100;
+                SDL_RenderClear(renderer);
+                render_menu_background(renderer, square);
+                load_menu_header(renderer,adder);
+                render_games_buttons(renderer,adder);
+                render_games_infos(renderer, partiesList,adder);
+                render_back_to_menu_button(renderer,adder);
+                break;
+            case SDLK_UP:
+                    if(adder<=-100)
+                    {
+                    adder=adder+100;
+                    SDL_RenderClear(renderer);
+                    render_menu_background(renderer, square);
+                    load_menu_header(renderer,adder);
+                    render_games_buttons(renderer,adder);
+                    render_games_infos(renderer, partiesList,adder);
+                    render_back_to_menu_button(renderer,adder);
+                    }
+                break;
             }
+            break;
         case SDL_MOUSEBUTTONDOWN:
-            choice=get_choice(renderer);
+            choice=get_choice(renderer,adder);
             if(choice!= -1)
             {
                 stop = 1;
@@ -36,7 +59,7 @@ int load_game_menu_and_get_choice(SDL_Renderer *renderer, Game partiesList[])
     return choice;
 }
 
-void load_menu_header(SDL_Renderer *renderer)
+void load_menu_header(SDL_Renderer *renderer, int adder)
 {
     SDL_Texture *header;
     SDL_Rect font_rect;
@@ -47,15 +70,15 @@ void load_menu_header(SDL_Renderer *renderer)
     {
         header = loadFont_Blended(renderer, font_OpenSans, text[i], 39, 174, 96);
         SDL_QueryTexture(header, NULL, NULL, &font_rect.w, &font_rect.h);
-        RendTex(header, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * (i + 1), (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2);
+        RendTex(header, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * (i + 1), (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2+adder);
         SDL_RenderPresent(renderer);
     }
 }
 
-void render_games_buttons(SDL_Renderer *renderer)
+void render_games_buttons(SDL_Renderer *renderer, int adder)
 {
     SDL_Rect game = {(WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2,
-                     (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 50,
+                     (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 50 +adder,
                      WINDOW_WIDTH / 1.1,
                      100
                     };
@@ -71,7 +94,7 @@ void render_games_buttons(SDL_Renderer *renderer)
 }
 
 
-void render_games_infos(SDL_Renderer *renderer, Game partiesList[])
+void render_games_infos(SDL_Renderer *renderer, Game partiesList[], int adder)
 {
     int size = saveSize();
     char ID[size][20];
@@ -102,26 +125,26 @@ void render_games_infos(SDL_Renderer *renderer, Game partiesList[])
     {
         text = loadFont_Blended(renderer, font_OpenSans, ID[j], 142, 68, 173);
         SDL_QueryTexture(text, NULL, NULL, &font_rect.w, &font_rect.h);
-        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30);
+        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30 +adder);
         text = loadFont_Blended(renderer, font_OpenSans, isIA[j], 142, 68, 173);
         SDL_QueryTexture(text, NULL, NULL, &font_rect.w, &font_rect.h);
-        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 2, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30);
+        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 2, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30+adder);
         text = loadFont_Blended(renderer, font_OpenSans, scoreW[j], 142, 68, 173);
         SDL_QueryTexture(text, NULL, NULL, &font_rect.w, &font_rect.h);
-        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 3, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30);
+        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 3, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30+adder);
         text = loadFont_Blended(renderer, font_OpenSans, scoreB[j], 142, 68, 173);
         SDL_QueryTexture(text, NULL, NULL, &font_rect.w, &font_rect.h);
-        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 4, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30);
+        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 4, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30+adder);
         text = loadFont_Blended(renderer, font_OpenSans, turn[j], 142, 68, 173);
         SDL_QueryTexture(text, NULL, NULL, &font_rect.w, &font_rect.h);
-        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 5, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30);
-        go_button.y = (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 45;
+        RendTex(text, renderer, (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 5, (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 30+adder);
+        go_button.y = (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (j + 1) - 45+adder;
         render_button(renderer, ">", go_button);
     }
     SDL_RenderPresent(renderer);
 }
 
-int get_choice(SDL_Renderer *renderer)
+int get_choice(SDL_Renderer *renderer, int adder)
 {
     int choice = -1;
     int cursor_x, cursor_y;
@@ -129,25 +152,25 @@ int get_choice(SDL_Renderer *renderer)
     for(int i = 0; i < saveSize(); i++)
     {
         if((cursor_x > (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 6)
-                && (cursor_y > (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (i + 1) - 30)
+                && (cursor_y > (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (i + 1) - 30+adder)
                 && (cursor_x < (WINDOW_WIDTH - WINDOW_WIDTH / 1.1) / 2 + 200 * 6 + 70)
-                && (cursor_y < (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (i + 1) - 30 + 70))
+                && (cursor_y < (WINDOW_HEIGHT - WINDOW_HEIGHT / 1.1) / 2 + 110 * (i + 1) - 30 +adder + 70))
         {
             choice = i+1;
         }
     }
     if((cursor_x>WINDOW_WIDTH-(BUTTON_WIDTH-150)-10)
-       &&(cursor_x<WINDOW_WIDTH-10)
-       &&(cursor_y>20)
-       &&(cursor_y<BUTTON_HEIGHT+20))
+            &&(cursor_x<WINDOW_WIDTH-10)
+            &&(cursor_y>20+adder)
+            &&(cursor_y<BUTTON_HEIGHT+20+adder))
     {
         choice=-2;
     }
     return choice;
 }
 
-void render_back_to_menu_button(SDL_Renderer *renderer)
+void render_back_to_menu_button(SDL_Renderer *renderer, int adder)
 {
-    SDL_Rect back_button={WINDOW_WIDTH-(BUTTON_WIDTH-150)-10, 20,BUTTON_WIDTH-150,BUTTON_HEIGHT};
+    SDL_Rect back_button= {WINDOW_WIDTH-(BUTTON_WIDTH-150)-10, 20+adder,BUTTON_WIDTH-150,BUTTON_HEIGHT};
     render_button(renderer,"Retour", back_button);
 }
