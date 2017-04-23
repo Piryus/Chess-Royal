@@ -16,7 +16,7 @@ SDL_Rect get_clicked_square(int x, int y)
             {
                 clickedSquare.x = numcase_to_coord_x(i);
                 clickedSquare.y = numcase_to_coord_y(j);
-                printf("Position de la case cliquee acquise : x=%d y=%d !\n", clickedSquare.x, clickedSquare.y);
+                //printf("Position de la case cliquee acquise : x=%d y=%d !\n", clickedSquare.x, clickedSquare.y);
             }
         }
     }
@@ -205,7 +205,7 @@ void wait_for_event(SDL_Renderer *renderer, Square square[][8], int ia, Game *pa
                     render_squares(renderer);
                     if(move_pawn_to(clickedSquare, square) == 1)
                     {
-                        printf("<><><><><><><><><><><><><><><><>\nTour : %d\n", partie->tour);
+                        printf("____________________  Tour : %3d  ____________________\n", partie->tour);
                         partie->tour = partie->tour + 1;
                         if(ia == 1)
                         {
@@ -314,7 +314,7 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
             }
         }
     }
-    printf("(color : %d)Blocked : %d\n",color,blocked);
+    //printf("(color : %d)Blocked : %d\n",color,blocked);
 
      if(blocked == 1){
         if(game->scoreB>game->scoreN){
@@ -339,14 +339,12 @@ int isblocked(int color, Game *game, SDL_Renderer *renderer){
 }
 
 int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game){
-//    int move_counter=0;
-    int winner = 0;
+    int winner = _VIDE;
     for(int i = 0; i <= 7; i++){
         if(square[i][7].pawn == _NOIR){
             modifJoueur(game->ia, _NOIR ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _NOIR);
             wait_for_click_on_button(renderer);
-            game->winner = _NOIR;
             winner = _NOIR;
             supprimerPartie(game->id);
         }
@@ -354,7 +352,6 @@ int getWinner(SDL_Renderer *renderer, Square square[][8], Game *game){
             modifJoueur(game->ia, _BLANC ,game->joueurN,game->joueurB);
             render_victory_screen(renderer, _BLANC);
             wait_for_click_on_button(renderer);
-            game->winner = _BLANC;
             winner = _BLANC;
             supprimerPartie(game->id);
         }
