@@ -13,7 +13,7 @@
 
 //Menu
 #define MENU_BUTTON_SPACING 50
-#define NB_MENU_BUTTONS 4
+#define NB_MENU_BUTTONS 5
 #define BUTTON_WIDTH WINDOW_WIDTH/4
 #define BUTTON_HEIGHT WINDOW_HEIGHT/15
 #define BUTTON_OUTLINE 5
@@ -50,7 +50,7 @@ We define our chess as below :
 6 |_|_|_|_|_|_|_|_|
 7 |_|_|_|_|_|_|_|_|
 
-Example : X = square[2][5]
+X = square[2][5]
 */
 
 
@@ -137,7 +137,7 @@ extern void chargerJoueur(int id, Joueur * joueur);
 extern void SaveJoueur( Joueur * joueur );
 extern int nbJoueur();
 extern int listerJoueur(Joueur joueurs[]);
-extern void modifJoueur(int ia, int winner , int jN, int jB);
+extern void modifJoueur(int ia, int winner , int njN, int njB);
 
 //Fonctions "raccourcis" SDL
 extern int RendTex(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y);
