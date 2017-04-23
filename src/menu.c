@@ -21,7 +21,6 @@ void menu(void)
         case SDL_QUIT:
             continuer = 0;
             break;
-
         case SDL_MOUSEBUTTONDOWN:
             quit = event_click(renderer, square, &partie);
             if(quit == 1)
@@ -144,6 +143,7 @@ int event_click(SDL_Renderer *renderer, Square square[][8], Game * partie)
             case 0://==================================    IA
                 SDL_RenderClear(renderer);
                 select_players(renderer, IA,partie);
+                SDL_RenderClear(renderer);
                 nouvellePartie(IA, partie,1,1);
                 initialize_pawns_pos(square);
                 game(renderer, square, IA, partie);

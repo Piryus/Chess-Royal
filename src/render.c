@@ -104,9 +104,11 @@ void render_button(SDL_Renderer *renderer, char text[], SDL_Rect button)
     SDL_RenderPresent(renderer);
 }
 
-int isCursorOnButton(SDL_Renderer *renderer, int cursorX, int cursorY, SDL_Rect button)
+int isCursorOnButton(SDL_Renderer *renderer, SDL_Rect button)
 {
     int isInside=0;
+    int cursorX, cursorY;
+    SDL_GetMouseState(&cursorX, &cursorY);
     if((cursorX>button.x)
                         &&(cursorX<button.x+button.w)
                      &&(cursorY>button.y)
@@ -115,4 +117,23 @@ int isCursorOnButton(SDL_Renderer *renderer, int cursorX, int cursorY, SDL_Rect 
         isInside=1;
     }
     return isInside;
+}
+
+void renderFillRect(SDL_Renderer *renderer,SDL_Rect rect,int r,int g,int b,int a)
+{
+    SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer,r,g,b,a);
+    SDL_RenderFillRect(renderer,&rect);
+    SDL_RenderPresent(renderer);
+}
+
+void renderTextInRect(SDL_Renderer *renderer, char text[], SDL_Rect rect)
+{
+    TTF_Font *font_OpenSans = TTF_OpenFont("ttf/OpenSans-Regular.ttf", 40);
+    SDL_Texture *TextTexture;
+    SDL_Rect font_rect;
+    TextTexture = loadFont_Blended(renderer, font_OpenSans, text, 0, 0, 0);
+    SDL_QueryTexture(TextTexture, NULL, NULL, &font_rect.w, &font_rect.h);
+    RendTex(TextTexture, renderer, (rect.x+font_rect.w)/2, (rect.y+font_rect.h)/2);
+    SDL_RenderPresent(renderer);
 }

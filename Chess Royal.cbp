@@ -58,9 +58,6 @@
 		<Unit filename="src/IA.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/SDLShorts.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="src/defs.h" />
 		<Unit filename="src/game.c">
 			<Option compilerVar="CC" />
@@ -78,6 +75,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/menu_players.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/render.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
