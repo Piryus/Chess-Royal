@@ -128,7 +128,7 @@ void get_authorized_moves(SDL_Rect rect, Square square[][8], int tour)
         {
             max_move = 1;
             square[i][j].isSelected = 0;
-            if((j < 2) || (j > 5))
+            if(((j < 2)&&(square[i][j].pawn==_NOIR))||((j > 5)&&(square[i][j].pawn==_BLANC)))
             {
                 max_move = 2;
             }
